@@ -1,75 +1,136 @@
-# MainUp
+# MainUp (Maintenance dan Peningkatan Aset)
 
-MainUp is a modern web application designed to help users manage and track their personal and professional growth through upskilling activities. The platform serves as a comprehensive tool for individuals looking to enhance their skills, monitor their learning progress, and stay organized in their professional development journey.
+MainUp adalah sistem manajemen pemeliharaan dan peningkatan aset yang komprehensif, dirancang untuk membantu organisasi dalam mengelola, memantau, dan mengoptimalkan aset mereka secara efektif.
 
-## Features
+## Fitur Utama
 
-- **Skill Tracking**: Monitor your progress in various skills and competencies
-- **Learning Path Management**: Create and follow customized learning paths
-- **Progress Analytics**: Visualize your growth with detailed analytics and progress reports
-- **Resource Library**: Access curated learning resources and materials
-- **Goal Setting**: Set and track personal development goals
-- **Community Integration**: Connect with other learners and share experiences
+- **Manajemen Aset**
+  - Pencatatan dan pelacakan semua aset
+  - Kategorisasi aset berdasarkan jenis, lokasi, dan departemen
+  - Riwayat lengkap setiap aset
 
-## Getting Started
+- **Jadwal Pemeliharaan**
+  - Perencanaan pemeliharaan preventif
+  - Penjadwalan otomatis
+  - Pengingat pemeliharaan rutin
+  - Tracking status pemeliharaan
 
-### Prerequisites
+- **Manajemen Pekerjaan**
+  - Pembuatan dan pengelolaan work order
+  - Alokasi teknisi dan sumber daya
+  - Pelacakan progress pekerjaan
+  - Pelaporan hasil pekerjaan
 
-- Node.js (v14 or higher)
-- npm or yarn
+- **Analisis dan Pelaporan**
+  - Dashboard performa aset
+  - Laporan kondisi aset
+  - Analisis biaya pemeliharaan
+  - Prediksi kebutuhan pemeliharaan
+
+- **Manajemen Inventaris**
+  - Pelacakan suku cadang
+  - Manajemen stok
+  - Sistem pemesanan otomatis
+  - Integrasi dengan supplier
+
+## Teknologi
+
+- Frontend: React.js dengan Next.js
+- Backend: Node.js/Express
+- Database: PostgreSQL
+- Authentication: JWT
+- UI Framework: Material-UI
+- API Documentation: Swagger/OpenAPI
+
+## Persyaratan Sistem
+
+- Node.js (v14 atau lebih tinggi)
+- PostgreSQL (v12 atau lebih tinggi)
 - Modern web browser
+- Koneksi internet stabil
 
-### Installation
+## Instalasi
 
-1. Clone the repository:
+1. Clone repository:
 ```bash
 git clone https://github.com/yourusername/mainup.git
 ```
 
 2. Install dependencies:
 ```bash
+cd mainup
 npm install
-# or
-yarn install
 ```
 
-3. Start the development server:
+3. Konfigurasi database:
+```bash
+cp .env.example .env
+# Edit file .env dengan kredensial database Anda
+```
+
+4. Jalankan migrasi database:
+```bash
+npm run migrate
+```
+
+5. Jalankan aplikasi:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-4. Open your browser and navigate to `http://localhost:3000`
+## Penggunaan
 
-## Tech Stack
+1. **Login Sistem**
+   - Gunakan kredensial yang diberikan oleh admin
+   - Pilih role sesuai dengan akses yang dimiliki
 
-- Frontend: React.js with Next.js
-- Styling: Tailwind CSS
-- State Management: Redux/Context API
-- Database: PostgreSQL
-- Authentication: NextAuth.js
+2. **Manajemen Aset**
+   - Tambah/edit/hapus aset
+   - Upload dokumentasi aset
+   - Atur kategori dan lokasi
 
-## Contributing
+3. **Pemeliharaan**
+   - Buat jadwal pemeliharaan
+   - Assign teknisi
+   - Monitor progress
+   - Validasi hasil pekerjaan
 
-We welcome contributions from the community! If you'd like to contribute:
+4. **Pelaporan**
+   - Generate laporan berkala
+   - Export data dalam berbagai format
+   - Analisis tren dan performa
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## Kontribusi
 
-## License
+Kami menerima kontribusi dari komunitas. Untuk berkontribusi:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+1. Fork repository
+2. Buat branch fitur (`git checkout -b fitur/FiturBaru`)
+3. Commit perubahan (`git commit -m 'Menambahkan fitur baru'`)
+4. Push ke branch (`git push origin fitur/FiturBaru`)
+5. Buat Pull Request
 
-## Contact
+## Lisensi
 
-Project Link: [https://github.com/yourusername/mainup](https://github.com/yourusername/mainup)
+Proyek ini dilisensikan di bawah MIT License - lihat file [LICENSE](LICENSE) untuk detail.
+
+## Dukungan
+
+Untuk bantuan dan dukungan, silakan:
+- Buat issue di GitHub
+- Hubungi tim support di support@mainup.com
+- Kunjungi dokumentasi di [docs.mainup.com](https://docs.mainup.com)
+
+## Tim Pengembang
+
+- Project Manager: [Nama PM]
+- Lead Developer: [Nama Lead]
+- UI/UX Designer: [Nama Designer]
+- Backend Developer: [Nama Backend Dev]
+- Frontend Developer: [Nama Frontend Dev]
 
 ## Acknowledgments
 
-- Thanks to all contributors who have helped shape MainUp
-- Special thanks to our early users for their valuable feedback
-- Inspired by the need for better personal development tracking tools
+- Terima kasih kepada semua kontributor yang telah membantu pengembangan MainUp
+- Apresiasi kepada pengguna awal yang telah memberikan feedback berharga
+- Terinspirasi dari kebutuhan akan sistem manajemen aset yang lebih baik
