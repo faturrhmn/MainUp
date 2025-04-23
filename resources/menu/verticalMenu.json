@@ -1,0 +1,40 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons bx bx-home-smile",
+      "slug": "dashboard"
+    },
+    {
+      "url": "/data-barang",
+      "name": "Data Barang",
+      "icon": "menu-icon tf-icons bx bx-package",
+      "slug": "data-barang"
+    },
+    {
+      "url": "/jadwal",
+      "name": "Jadwal",
+      "icon": "menu-icon tf-icons bx bx-calendar",
+      "slug": "jadwal"
+    },
+    {
+      "url": "/ruangan",
+      "name": "Ruangan",
+      "icon": "menu-icon tf-icons bx bx-building",
+      "slug": "ruangan"
+    },
+    {
+      "url": "/maintenance",
+      "name": "Maintenance",
+      "icon": "menu-icon tf-icons bx bx-wrench",
+      "slug": "maintenance"
+    },
+    {
+      "url": "/pengaturan",
+      "name": "Pengaturan",
+      "icon": "menu-icon tf-icons bx bx-cog",
+      "slug": "pengaturan"
+    }
+  ]
+}
