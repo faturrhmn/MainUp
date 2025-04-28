@@ -27,4 +27,9 @@ class Asset extends Model
     {
         return $this->belongsTo(Room::class, 'id_ruangan', 'id_ruangan');
     }
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class, 'id_aset');
+    }
+
 } 

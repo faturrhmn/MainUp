@@ -4,79 +4,131 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\Room;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
 
 class DataBarangController extends Controller
 {
     public function index()
     {
-        $assets = Asset::with('room')->get();
+        // Ambil data asset dengan relasi room dan jadwal
+        $assets = Asset::with('room', 'jadwals')->get(); // Mengambil data jadwal yang terkait
+    
+        // Kirim data assets ke view
         return view('content.data-barang.index', compact('assets'));
     }
 
-    public function show($id)
+
+    public function show($id)   
     {
-        $asset = Asset::with('room')->findOrFail($id);
+        // Ambil asset dengan relasi room dan jadwal
+        $asset = Asset::with('room', 'jadwals')->findOrFail($id); // Menampilkan jadwal terkait
+
+        // Kirim data asset ke view
         return view('content.data-barang.show', compact('asset'));
     }
 
+
     public function create()
     {
+        // Ambil semua data ruangan dan jadwal
         $rooms = Room::all();
-        return view('content.data-barang.create', compact('rooms'));
+        $jadwals = Jadwal::all(); // Ambil semua data jadwal jika diperlukan di view
+    
+        // Kirim data ruangan dan jadwal ke view
+        return view('content.data-barang.create', compact('rooms', 'jadwals'));
     }
+    
 
     public function store(Request $request)
     {
+        // Validasi data input
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'merk' => 'required|string|max:255',
             'tahun' => 'required|integer',
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
-            'keterangan' => 'nullable|string'
+            'keterangan' => 'nullable|string',
+            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Validasi siklus
+            'tanggal_mulai' => 'required|date', // Validasi tanggal mulai
         ], [
             'jumlah.min' => 'Jumlah barang minimal 1'
         ]);
-
+    
+        // Ambil semua data dari request
         $data = $request->all();
         $data['id_ruangan'] = $request->ruangan;
-
-        Asset::create($data);
-
+    
+        // Simpan data barang ke tabel asset
+        $asset = Asset::create($data);
+    
+        // Simpan data jadwal ke tabel jadwal
+        $jadwalData = [
+            'siklus' => $request->siklus,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'id_aset' => $asset->id_aset,  // ID barang yang baru disimpan
+        ];
+    
+        // Menyimpan data jadwal
+        Jadwal::create($jadwalData);
+    
+        // Redirect dengan pesan sukses
         return redirect()->route('data-barang')
-            ->with('success', 'Data barang berhasil ditambahkan');
+            ->with('success', 'Data barang dan jadwal berhasil ditambahkan');
     }
+    
 
     public function edit($id)
     {
-        $asset = Asset::findOrFail($id);
-        $rooms = Room::all();
+        // Ambil data asset dengan relasi room dan jadwal
+        $asset = Asset::with('room', 'jadwals')->findOrFail($id); // Menampilkan jadwal terkait
+        $rooms = Room::all(); // Ambil semua ruangan
+    
+        // Kirim data asset, ruangan, dan jadwal ke view
         return view('content.data-barang.edit', compact('asset', 'rooms'));
     }
+    
 
     public function update(Request $request, $id)
     {
+        // Validasi data input
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'merk' => 'required|string|max:255',
             'tahun' => 'required|integer',
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
-            'keterangan' => 'nullable|string'
+            'keterangan' => 'nullable|string',
+            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Validasi siklus
+            'tanggal_mulai' => 'required|date', // Validasi tanggal mulai
         ], [
             'jumlah.min' => 'Jumlah barang minimal 1'
         ]);
-
+    
+        // Cari asset berdasarkan ID
         $asset = Asset::findOrFail($id);
         $data = $request->all();
         $data['id_ruangan'] = $request->ruangan;
         
+        // Update data barang
         $asset->update($data);
-
+    
+        // Jika ada data jadwal terkait, perbarui jadwalnya
+        if ($asset->jadwals->count() > 0) {
+            // Ambil jadwal pertama (asumsi satu jadwal terkait)
+            $jadwal = $asset->jadwals->first();
+            $jadwal->update([
+                'siklus' => $request->siklus,
+                'tanggal_mulai' => $request->tanggal_mulai,
+            ]);
+        }
+    
+        // Redirect dengan pesan sukses
         return redirect()->route('data-barang')
-            ->with('success', 'Data barang berhasil diperbarui');
+            ->with('success', 'Data barang dan jadwal berhasil diperbarui');
     }
+    
 
     public function destroyMultiple(Request $request)
     {
