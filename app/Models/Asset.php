@@ -19,6 +19,7 @@ class Asset extends Model
         'tahun',
         'jumlah',
         'id_ruangan',
+        'tipe',
         'keterangan'
     ];
 
