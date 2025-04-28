@@ -76,9 +76,9 @@ $(document).ready(function() {
                                         <label class="form-label" for="ruangan">Ruangan</label>
                                         <select class="form-select" id="ruangan" name="ruangan" required>
                                             <option value="">Pilih Ruangan</option>
-                                            @foreach($rooms as $room)
-                                                <option value="{{ $room->id_ruangan }}" {{ $asset->id_ruangan == $room->id_ruangan ? 'selected' : '' }}>
-                                                    {{ $room->nama_ruangan }}
+                                            @foreach($ruangans as $ruangan)
+                                                <option value="{{ $ruangan->id_ruangan }}" {{ $asset->id_ruangan == $ruangan->id_ruangan ? 'selected' : '' }}>
+                                                    {{ $ruangan->nama_ruangan }}
                                                 </option>
                                             @endforeach
                                         </select>

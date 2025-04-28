@@ -22,8 +22,8 @@ class Asset extends Model
         'keterangan'
     ];
 
-    public function room()
+    public function ruangan()
     {
-        return $this->belongsTo(Room::class, 'id_ruangan', 'id_ruangan');
+        return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
     }
 } 

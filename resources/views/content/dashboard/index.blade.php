@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <td>{{ $asset->merk }}</td>
                                         <td>{{ $asset->tahun }}</td>
                                         <td>{{ $asset->jumlah }}</td>
-                                        <td>{{ $asset->room->nama_ruangan }}</td>
+                                        <td>{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
                                         <td>{{ $asset->keterangan }}</td>
                                     </tr>
                                     @endforeach

@@ -75,8 +75,8 @@ $(document).ready(function() {
                                         <label class="form-label" for="ruangan">Ruangan</label>
                                         <select class="form-select" id="ruangan" name="ruangan" required>
                                             <option value="">Pilih Ruangan</option>
-                                            @foreach($rooms as $room)
-                                                <option value="{{ $room->id_ruangan }}">{{ $room->nama_ruangan }}</option>
+                                            @foreach($ruangans as $ruangan)
+                                                <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nama_ruangan }}</option>
                                             @endforeach
                                         </select>
                                     </div>

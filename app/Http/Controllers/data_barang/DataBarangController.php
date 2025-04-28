@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\data_barang;
+use App\Http\Controllers\Controller;
 use App\Models\Asset;
-use App\Models\Room;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 
 class DataBarangController extends Controller
 {
     public function index()
     {
-        $assets = Asset::with('room')->get();
+        $assets = Asset::with('ruangan')->get();
         return view('content.data-barang.index', compact('assets'));
     }
 
     public function show($id)
     {
-        $asset = Asset::with('room')->findOrFail($id);
+        $asset = Asset::with('ruangan')->findOrFail($id);
         return view('content.data-barang.show', compact('asset'));
     }
 
     public function create()
     {
-        $rooms = Room::all();
-        return view('content.data-barang.create', compact('rooms'));
+        $ruangans = Ruangan::all();
+        return view('content.data-barang.create', compact('ruangans'));
     }
 
     public function store(Request $request)
@@ -51,8 +51,8 @@ class DataBarangController extends Controller
     public function edit($id)
     {
         $asset = Asset::findOrFail($id);
-        $rooms = Room::all();
-        return view('content.data-barang.edit', compact('asset', 'rooms'));
+        $ruangans = Ruangan::all();
+        return view('content.data-barang.edit', compact('asset', 'ruangans'));
     }
 
     public function update(Request $request, $id)

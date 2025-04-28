@@ -22,6 +22,7 @@
                             <tr>
                                 <th>Nama</th>
                                 <th>Username</th>
+                                <th>Role</th>
                                 <th>Tanggal Dibuat</th>
                                 <th>Aksi</th>
                             </tr>
@@ -31,6 +32,7 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->username }}</td>
+                                <td>{{ $user->role ? ucfirst($user->role->name) : '-' }}</td>
                                 <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
                                     <div class="dropdown">

@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Data Barang')
+@section('title', 'Ruangan')
 
 @section('vendor-style')
 <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
 @section('page-script')
 <script>
 $(document).ready(function() {
-    var table = new DataTable('#assetsTable', {
+    var table = new DataTable('#ruanganTable', {
         processing: true,
         pageLength: 10,
         language: {
@@ -33,7 +33,7 @@ $(document).ready(function() {
             }
         },
         columnDefs: [
-            { orderable: false, targets: [0] },
+            { orderable: false, targets: [0, 4] },
             { orderable: true, targets: '_all' }
         ],
         order: [[1, 'asc']]
@@ -68,7 +68,7 @@ $(document).ready(function() {
         e.preventDefault();
         var checkedItems = $('.item-checkbox:checked');
         if (checkedItems.length > 0) {
-            if (confirm('Apakah Anda yakin ingin menghapus ' + checkedItems.length + ' item yang dipilih?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus ' + checkedItems.length + ' ruangan yang dipilih?')) {
                 $('#delete-form').submit();
             }
         }
@@ -88,67 +88,51 @@ $(document).ready(function() {
                 <div class="col-sm-12">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title text-primary">Daftar Data Barang</h5>
+                            <h5 class="card-title text-primary">Daftar Ruangan</h5>
                             <div>
                                 <button type="button" class="btn btn-danger me-2" id="delete-selected" disabled>
                                     <i class="bx bx-trash me-1"></i> Hapus (<span id="selected-count">0</span>)
                                 </button>
-                                <a href="{{ route('data-barang.create') }}" class="btn btn-primary">
-                                    <i class="bx bx-plus me-1"></i> Tambah Data
+                                <a href="{{ route('ruangan.create') }}" class="btn btn-primary">
+                                    <i class="bx bx-plus me-1"></i> Tambah Ruangan
                                 </a>
                             </div>
                         </div>
-
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible mb-3" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        <form id="delete-form" action="{{ route('data-barang.destroy-multiple') }}" method="POST">
+                        <form id="delete-form" action="{{ route('ruangan.destroy-multiple') }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <div class="table-responsive">
-                                <table id="assetsTable" class="table table-striped" style="width:100%">
+                                <table id="ruanganTable" class="table table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>
                                                 <input type="checkbox" id="select-all" class="form-check-input">
                                             </th>
                                             <th>No</th>
-                                            <th>Nama Barang</th>
-                                            <th>Merk</th>
-                                            <th>Tahun</th>
-                                            <th>Jumlah</th>
                                             <th>Ruangan</th>
-                                            <th>Keterangan</th>
+                                            <th>Total Aset</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($assets as $index => $asset)
+                                        @foreach($ruangans as $index => $r)
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="selected_items[]" value="{{ $asset->id_aset }}" class="form-check-input item-checkbox">
+                                                <input type="checkbox" name="selected_items[]" value="{{ $r->id_ruangan }}" class="form-check-input item-checkbox">
                                             </td>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $asset->nama_barang }}</td>
-                                            <td>{{ $asset->merk }}</td>
-                                            <td>{{ $asset->tahun }}</td>
-                                            <td>{{ $asset->jumlah }}</td>
-                                            <td>{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
-                                            <td>{{ $asset->keterangan }}</td>
+                                            <td>{{ $r->nama_ruangan }}</td>
+                                            <td>{{ $r->assets_count }}</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="{{ route('data-barang.edit', $asset->id_aset) }}">
+                                                        <a href="{{ route('ruangan.edit', $r->id_ruangan) }}" class="dropdown-item">
                                                             <i class="bx bx-edit-alt me-1"></i> Edit
                                                         </a>
-                                                        <a class="dropdown-item" href="{{ route('data-barang.show', $asset->id_aset) }}">
+                                                        <a class="dropdown-item" href="{{ route('ruangan.show', $r->id_ruangan) }}">
                                                             <i class="bx bx-detail me-1"></i> Details
                                                         </a>
                                                     </div>

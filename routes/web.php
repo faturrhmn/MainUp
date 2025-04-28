@@ -43,12 +43,15 @@ use App\Http\Controllers\form_elements\InputGroups;
 use App\Http\Controllers\form_layouts\VerticalForm;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DataBarangController;
-use App\Http\Controllers\PengaturanController;
+use App\Http\Controllers\dashboard\DashboardController;
+use App\Http\Controllers\data_barang\DataBarangController;
+use App\Http\Controllers\pengaturan\PengaturanController;
+use App\Http\Controllers\ruangan\RuanganController;
+use App\Http\Controllers\AssetController;
+
 
 // Main Page Route
-Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // layout
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
@@ -131,7 +134,7 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
     // Main Page Route
-    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
     // data barang
     Route::get('/data-barang', [DataBarangController::class, 'index'])->name('data-barang');
@@ -152,3 +155,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 // Pengaturan Route
 Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan')->middleware('auth');
+
+
+Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
+Route::get('/ruangan/create', [RuanganController::class, 'create'])->name('ruangan.create');
+Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
+Route::get('ruangan/{id_ruangan}/edit', [RuanganController::class, 'edit'])->name('ruangan.edit');
+Route::put('ruangan/{id_ruangan}', [RuanganController::class, 'update'])->name('ruangan.update');
+Route::delete('/ruangan/destroy-multiple', [RuanganController::class, 'destroyMultiple'])->name('ruangan.destroy-multiple');
+Route::get('ruangan/{id_ruangan}', [RuanganController::class, 'show'])->name('ruangan.show');
+
+Route::get('/barang/{id}', [AssetController::class, 'show'])->name('detail-barang');
