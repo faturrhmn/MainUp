@@ -18,7 +18,7 @@ class User extends Authenticatable
    */
   protected $fillable = [
     'name',
-    'email',
+    'username',
     'password',
   ];
 
@@ -43,5 +43,15 @@ class User extends Authenticatable
       'email_verified_at' => 'datetime',
       'password' => 'hashed',
     ];
+  }
+
+  /**
+   * Get the login username to be used by the controller.
+   *
+   * @return string
+   */
+  public function username()
+  {
+    return 'username';
   }
 }

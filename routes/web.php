@@ -45,6 +45,7 @@ use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataBarangController;
+use App\Http\Controllers\PengaturanController;
 
 // Main Page Route
 Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
@@ -57,7 +58,7 @@ Route::get('/layouts/container', [Container::class, 'index'])->name('layouts-con
 Route::get('/layouts/blank', [Blank::class, 'index'])->name('layouts-blank');
 
 // pages
-Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
+Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account')->middleware('auth');
 Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
@@ -120,6 +121,34 @@ Route::put('/data-barang/{id}', [DataBarangController::class, 'update'])->name('
 Route::delete('/data-barang/destroy-multiple', [DataBarangController::class, 'destroyMultiple'])->name('data-barang.destroy-multiple');
 
 // Authentication Routes
-Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+});
+
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+// Protected Routes
+Route::middleware(['auth'])->group(function () {
+    // Main Page Route
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    
+    // data barang
+    Route::get('/data-barang', [DataBarangController::class, 'index'])->name('data-barang');
+    Route::get('/data-barang/create', [DataBarangController::class, 'create'])->name('data-barang.create');
+    Route::post('/data-barang', [DataBarangController::class, 'store'])->name('data-barang.store');
+    Route::get('/data-barang/{id}', [DataBarangController::class, 'show'])->name('data-barang.show');
+    Route::get('/data-barang/{id}/edit', [DataBarangController::class, 'edit'])->name('data-barang.edit');
+    Route::put('/data-barang/{id}', [DataBarangController::class, 'update'])->name('data-barang.update');
+    Route::delete('/data-barang/destroy-multiple', [DataBarangController::class, 'destroyMultiple'])->name('data-barang.destroy-multiple');
+    
+    // Add other protected routes here...
+});
+
+// Admin Routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+});
+
+// Pengaturan Route
+Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan')->middleware('auth');

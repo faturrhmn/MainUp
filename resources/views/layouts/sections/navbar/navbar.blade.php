@@ -66,8 +66,8 @@ $navbarDetached = ($navbarDetached ?? '');
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0">John Doe</h6>
-                      <small class="text-muted">Admin</small>
+                      <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+                      <small class="text-muted">{{ Auth::user()->email }}</small>
                     </div>
                   </div>
                 </a>
@@ -76,30 +76,12 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider my-1"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
-                  <i class="bx bx-user bx-md me-3"></i><span>My Profile</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="javascript:void(0);">
-                  <i class="bx bx-cog bx-md me-3"></i><span>Settings</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="javascript:void(0);">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 bx bx-credit-card bx-md me-3"></i><span class="flex-grow-1 align-middle">Billing Plan</span>
-                    <span class="flex-shrink-0 badge rounded-pill bg-danger">4</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <div class="dropdown-divider my-1"></div>
-              </li>
-              <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   <i class="bx bx-power-off bx-md me-3"></i><span>Log Out</span>
                 </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                  @csrf
+                </form>
               </li>
             </ul>
           </li>

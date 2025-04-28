@@ -25,7 +25,7 @@
 .logo-container {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: center ;
   align-items: center;
   padding-left: 4rem;
 }
@@ -57,9 +57,9 @@
             <form id="formAuthentication" class="mb-6" action="{{ route('login') }}" method="POST">
               @csrf
               <div class="mb-6">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" autofocus>
-                @error('email')
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" placeholder="Masukkan username" value="{{ old('username') }}" autofocus>
+                @error('username')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
@@ -81,9 +81,9 @@
                       Remember Me
                     </label>
                   </div>
-                  <a href="{{url('auth/forgot-password-basic')}}">
+                  <!-- <a href="{{url('auth/forgot-password-basic')}}">
                     <span>Forgot Password?</span>
-                  </a>
+                  </a> -->
                 </div>
               </div>
               <div class="mb-6">
@@ -91,12 +91,12 @@
               </div>
             </form>
 
-            <p class="text-center">
+            <!-- <p class="text-center">
               <span>New on our platform?</span>
               <a href="{{url('auth/register-basic')}}">
                 <span>Create an account</span>
               </a>
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
@@ -110,4 +110,37 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const form = document.getElementById('formAuthentication');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.getElementById('remember-me');
+
+    // Check if there are saved credentials
+    const savedUsername = localStorage.getItem('rememberedUsername');
+    const savedPassword = localStorage.getItem('rememberedPassword');
+    
+    if (savedUsername && savedPassword) {
+        usernameInput.value = savedUsername;
+        passwordInput.value = savedPassword;
+        rememberMeCheckbox.checked = true;
+    }
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        if (rememberMeCheckbox.checked) {
+            // Save credentials to localStorage
+            localStorage.setItem('rememberedUsername', usernameInput.value);
+            localStorage.setItem('rememberedPassword', passwordInput.value);
+        } else {
+            // Remove saved credentials if "Remember Me" is unchecked
+            localStorage.removeItem('rememberedUsername');
+            localStorage.removeItem('rememberedPassword');
+        }
+    });
+});
+</script>
 @endsection
