@@ -29,9 +29,9 @@ class Jadwal extends Model
         '1_tahun' => '1 Tahun',
     ];
 
-    // Relasi dengan model Asset
+    
     public function ruangan()
-    {
-        return $this->belongsTo(Asset::class, 'id_aset', 'id_aset');
-    }
+{
+    return $this->belongsTo(Asset::class, 'id_aset', 'id_aset');
+}
 }

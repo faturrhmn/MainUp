@@ -123,6 +123,8 @@ $(document).ready(function() {
                                             <th>Jumlah</th>
                                             <th>Ruangan</th>
                                             <th>Keterangan</th>
+                                            <th>Siklus</th>
+                                            <th>Tanggal Mulai</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -139,6 +141,21 @@ $(document).ready(function() {
                                             <td>{{ $asset->jumlah }}</td>
                                             <td>{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
                                             <td>{{ $asset->keterangan }}</td>
+                                            <td>
+                                                @if($asset->jadwals->isNotEmpty())
+                                                    {{ $asset->jadwals->first()->siklus }}
+                                                @else
+                                                    Tidak Ada
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($asset->jadwals->isNotEmpty())
+                                                    {{ \Carbon\Carbon::parse($asset->jadwals->first()->tanggal_mulai)->format('d-m-Y') }}
+                                                @else
+                                                    Tidak Ada
+                                                @endif
+                                            </td>
+
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -166,4 +183,4 @@ $(document).ready(function() {
         </div>
     </div>
 </div>
-@endsection 
+@endsection
