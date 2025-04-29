@@ -97,19 +97,19 @@ $(document).ready(function() {
                                         <label class="form-label" for="siklus">Siklus Maintenance</label>
                                         <select class="form-select" id="siklus" name="siklus" required>
                                             <option value="">Pilih Siklus Maintenance</option>
-                                            <option value="hari" {{ $asset->jadwals->first()->siklus == 'hari' ? 'selected' : '' }}>Hari</option>
-                                            <option value="minggu" {{ $asset->jadwals->first()->siklus == 'minggu' ? 'selected' : '' }}>Minggu</option>
-                                            <option value="bulan" {{ $asset->jadwals->first()->siklus == 'bulan' ? 'selected' : '' }}>Bulan</option>
-                                            <option value="3_bulan" {{ $asset->jadwals->first()->siklus == '3_bulan' ? 'selected' : '' }}>3 Bulan</option>
-                                            <option value="6_bulan" {{ $asset->jadwals->first()->siklus == '6_bulan' ? 'selected' : '' }}>6 Bulan</option>
-                                            <option value="1_tahun" {{ $asset->jadwals->first()->siklus == '1_tahun' ? 'selected' : '' }}>1 Tahun</option>
+                                            <option value="hari" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == 'hari' ? 'selected' : '' }}>Hari</option>
+                                            <option value="minggu" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == 'minggu' ? 'selected' : '' }}>Minggu</option>
+                                            <option value="bulan" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == 'bulan' ? 'selected' : '' }}>Bulan</option>
+                                            <option value="3_bulan" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == '3_bulan' ? 'selected' : '' }}>3 Bulan</option>
+                                            <option value="6_bulan" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == '6_bulan' ? 'selected' : '' }}>6 Bulan</option>
+                                            <option value="1_tahun" {{ $asset->jadwals->isNotEmpty() && $asset->jadwals->first()->siklus == '1_tahun' ? 'selected' : '' }}>1 Tahun</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="tanggal_mulai">Tanggal Mulai</label>
-                                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ \Carbon\Carbon::parse($asset->jadwals->first()->tanggal_mulai)->format('Y-m-d') }}" required>
+                                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ $asset->jadwals->isNotEmpty() ? \Carbon\Carbon::parse($asset->jadwals->first()->tanggal_mulai)->format('Y-m-d') : '' }}" required>
 
                                     </div>
                                 </div>

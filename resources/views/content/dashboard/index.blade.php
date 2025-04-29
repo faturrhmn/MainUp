@@ -73,7 +73,59 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 
 @section('content')
-<div class="row">
+
+<div class="container-xxl flex-grow-1 container-p-y">
+  <div class="row g-4">
+
+    <!-- Card 1 -->
+    <div class="col-md-3 col-sm-6">
+      <div class="custom-card p-4 text-center">
+        <div class="icon-wrapper mx-auto mb-3">
+          <i class="bi bi-box"></i> <!-- Total Aset -->
+        </div>
+        <small class="text-muted mb-1 d-block">Total Aset</small>
+        <h3 class="fw-bold mb-0">{{ $totalAssets }}</h3>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col-md-3 col-sm-6">
+      <div class="custom-card p-4 text-center">
+        <div class="icon-wrapper mx-auto mb-3">
+          <i class="bi bi-door-open"></i> <!-- Total Ruangan -->
+        </div>
+        <small class="text-muted mb-1 d-block">Total Ruangan</small>
+        <h3 class="fw-bold mb-0">{{ $totalRuangans }}</h3>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-md-3 col-sm-6">
+      <div class="custom-card p-4 text-center">
+        <div class="icon-wrapper mx-auto mb-3">
+          <i class="bi bi-shield-check"></i> <!-- Aset Preventif -->
+        </div>
+        <small class="text-muted mb-1 d-block">Aset Preventive</small>
+        <h3 class="fw-bold mb-0">{{ $totalPreventive }}</h3>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col-md-3 col-sm-6">
+      <div class="custom-card p-4 text-center">
+        <div class="icon-wrapper mx-auto mb-3">
+          <i class="bi bi-tools"></i> <!-- Total Corrective -->
+        </div>
+        <small class="text-muted mb-1 d-block">Total Corrective</small>
+        <h3 class="fw-bold mb-0">{{ $totalCorrective }}</h3>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Tabel Daftar Aset -->
+<div class="row mt-4">
     <div class="col-lg-12 mb-4 order-0">
         <div class="card">
             <div class="d-flex align-items-end row">
@@ -101,8 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <td>{{ $asset->merk }}</td>
                                         <td>{{ $asset->tahun }}</td>
                                         <td>{{ $asset->jumlah }}</td>
+                                        <td>{{ $asset->tipe }}</td>
                                         <td>{{ $asset->ruangan->nama_ruangan }}</td>
-                                        <td>{{ $asset->keterangan }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
