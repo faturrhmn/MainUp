@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Ruangan</label>
-                                    <p>{{ $asset->ruangan->nama_ruangan ?? '-' }}</p>
+                                    <p>{{ $asset->ruangan->nama_ruangan }}</p>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Keterangan</label>

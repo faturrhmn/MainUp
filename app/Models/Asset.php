@@ -19,6 +19,7 @@ class Asset extends Model
         'tahun',
         'jumlah',
         'id_ruangan',
+        'tipe',
         'keterangan'
     ];
 
@@ -26,4 +27,9 @@ class Asset extends Model
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
     }
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class, 'id_aset');
+    }
+
 } 

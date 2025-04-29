@@ -21,6 +21,12 @@ $(document).ready(function() {
         allowClear: true,
         width: '100%'
     });
+    $('#siklus').select3({
+        theme: 'bootstrap-5',
+        placeholder: 'Pilih Siklus Maintenance',
+        allowClear: true,
+        width: '100%'
+    });
 });
 </script>
 @endsection
@@ -64,6 +70,21 @@ $(document).ready(function() {
                                     <div class="mb-3">
                                         <label class="form-label" for="tahun">Tahun</label>
                                         <input type="number" class="form-control" id="tahun" name="tahun" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="siklus">Siklus Maintenance</label>
+                                        <select class="form-select" id="siklus" name="siklus" required>
+                                            <option value="">Pilih Siklus Maintenance</option>
+                                            @foreach(App\Models\Jadwal::SIKLUS_OPTIONS as $value => $label)
+                                                <option value="{{ $value }}" {{ old('siklus') == $value ? 'selected' : '' }}>
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="tanggal_mulai">Tanggal Mulai</label>
+                                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
