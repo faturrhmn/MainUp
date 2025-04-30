@@ -72,19 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 @section('content')
-<div class="mb-3 d-flex justify-content-between align-items-center">
-    <div class="flex-grow-1 me-3">
-        <input type="text" class="form-control" placeholder="Search" id="searchInput">
-    </div>
-    <div>
-        <button class="btn btn-outline-danger me-2" id="btnHapus">
-            <i class="bx bx-trash"></i> Hapus
-        </button>
-        <button class="btn btn-primary" id="btnTambah">
-            <i class="bx bx-plus"></i> Tambah
-        </button>
-    </div>
-</div>
 <div class="card">
     <div class="card-body">
         <h4 class="card-title mb-4 fw-bold">Maintenace Barang Proccessed</h4>
@@ -95,8 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Nama Barang</th>
                         <th>Merk</th>
                         <th>Ruangan</th>
-                        <th>Tanggal</th>
-                        <th>Tipe</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Jadwal Maintenance</th>
+                        <th>Siklus</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -106,17 +95,50 @@ document.addEventListener('DOMContentLoaded', function() {
        <td>{{ $item->asset->nama_barang ?? '-' }}</td>
        <td>{{ $item->asset->merk ?? '-' }}</td>
        <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
-       <td>{{ $item->tanggal_mulai }}</td>
-       <td>{{ $item->asset->tipe ?? '-' }}</td>
+       <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
+       <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
        <td>
-           <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Aksi">
+           @switch($item->siklus)
+               @case('hari')
+                   Harian
+                   @break
+               @case('minggu')
+                   Mingguan
+                   @break
+               @case('bulan')
+                   Bulanan
+                   @break
+               @case('3_bulan')
+                   3 Bulan
+                   @break
+               @case('6_bulan')
+                   6 Bulan
+                   @break
+               @case('1_tahun')
+                   1 Tahun
+                   @break
+               @default
+                   {{ $item->siklus }}
+           @endswitch
+       </td>
+       <td>
+           @if($item->status_perbaikan)
+               <span class="badge bg-{{ $item->status_perbaikan == 'selesai' ? 'success' : 'warning' }}">
+                   {{ ucfirst($item->status_perbaikan) }}
+               </span>
+           @else
+               <span class="badge bg-info">Belum Diproses</span>
+           @endif
+       </td>
+       <td>
+           <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Proses Maintenance">
                <i class="bx bx-wrench"></i>
            </a>
        </td>
    </tr>
    @empty
    <tr>
-       <td colspan="6" class="text-center">Tidak ada data.</td>
+       <td colspan="8" class="text-center">Tidak ada barang yang memerlukan maintenance dalam 7 hari ke depan.</td>
    </tr>
    @endforelse
                 </tbody>

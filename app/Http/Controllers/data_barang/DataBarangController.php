@@ -127,7 +127,6 @@ class DataBarangController extends Controller
             $jadwal->update([
                 'siklus' => $request->siklus,
                 'tanggal_mulai' => $request->tanggal_mulai,
-                'keterangan' => $request->keterangan ?? '',
             ]);
         } else {
             // Buat jadwal baru jika belum ada
@@ -135,7 +134,6 @@ class DataBarangController extends Controller
                 'id_aset' => $asset->id_aset,
                 'siklus' => $request->siklus,
                 'tanggal_mulai' => $request->tanggal_mulai,
-                'keterangan' => $request->keterangan ?? '',
             ]);
         }
     
