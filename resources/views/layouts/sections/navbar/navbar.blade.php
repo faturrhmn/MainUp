@@ -44,10 +44,61 @@ $navbarDetached = ($navbarDetached ?? '');
         <!-- /Search -->
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
-          <!-- Place this tag where you want the button to render. -->
-          <!-- <li class="nav-item lh-1 me-4">
-            <a class="github-button" href="{{config('variables.repository')}}" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star themeselection/sneat-html-laravel-admin-template-free on GitHub">Star</a>
-          </li> --> 
+          <!-- Notification -->
+          <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <i class="bx bx-bell bx-sm"></i>
+              <span class="badge bg-danger rounded-pill badge-notifications">3</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li class="dropdown-header">Notifikasi</li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <i class="bx bx-info-circle bx-sm text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <span>Notifikasi 1</span>
+                      <div class="small text-muted">Baru saja</div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <i class="bx bx-error-circle bx-sm text-warning"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <span>Notifikasi 2</span>
+                      <div class="small text-muted">5 menit lalu</div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <i class="bx bx-check-circle bx-sm text-success"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <span>Notifikasi 3</span>
+                      <div class="small text-muted">1 jam lalu</div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <a class="dropdown-item text-center" href="#">Lihat semua notifikasi</a>
+              </li>
+            </ul>
+          </li>
 
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">

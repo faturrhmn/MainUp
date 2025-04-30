@@ -48,6 +48,7 @@ use App\Http\Controllers\data_barang\DataBarangController;
 use App\Http\Controllers\pengaturan\PengaturanController;
 use App\Http\Controllers\ruangan\RuanganController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\maintenance\MaintenanceController;
 
 
 // Main Page Route
@@ -166,3 +167,9 @@ Route::delete('/ruangan/destroy-multiple', [RuanganController::class, 'destroyMu
 Route::get('ruangan/{id_ruangan}', [RuanganController::class, 'show'])->name('ruangan.show');
 
 Route::get('/barang/{id}', [AssetController::class, 'show'])->name('detail-barang');
+
+
+Route::get('/maintenance/proses', [MaintenanceController::class, 'proses'])->name('maintenance.proses');
+Route::get('/maintenance/selesai', [MaintenanceController::class, 'selesai'])->name('maintenance.selesai');
+Route::get('/maintenance/{id}/edit', [MaintenanceController::class, 'edit'])->name('maintenance.edit');
+Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');

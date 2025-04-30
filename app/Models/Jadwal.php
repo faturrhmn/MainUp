@@ -17,6 +17,9 @@ class Jadwal extends Model
         'siklus',
         'tanggal_mulai',
         'id_aset',
+        'tanggal_perbaikan',
+        'status_perbaikan',
+        'keterangan',
     ];
 
     // Definisikan nilai enum sebagai array
@@ -30,8 +33,18 @@ class Jadwal extends Model
     ];
 
     
-    public function ruangan()
-{
-    return $this->belongsTo(Asset::class, 'id_aset', 'id_aset');
-}
+    public function asset()
+    {
+        return $this->belongsTo(Asset::class, 'id_aset', 'id_aset');
+    }
+
+    public function beforeImages()
+    {
+        return $this->hasMany(\App\Models\BeforeImage::class, 'maintenance_id', 'id_jadwal');
+    }
+
+    public function afterImages()
+    {
+        return $this->hasMany(\App\Models\AfterImage::class, 'maintenance_id', 'id_jadwal');
+    }
 }

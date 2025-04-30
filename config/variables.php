@@ -30,19 +30,51 @@
         "url" => "/",
         "name" => "Dashboard",
         "icon" => "menu-icon tf-icons bx bx-home-circle",
-        "slug" => "dashboard"
+        "slug" => ["dashboard"]
       ],
       [
         "url" => "/data-barang",
         "name" => "Data Barang",
         "icon" => "menu-icon tf-icons bx bx-box",
-        "slug" => "data-barang"
+        "slug" => ["data-barang", "data-barang.create", "data-barang.edit", "data-barang.show"]
+      ],
+      [
+        "url" => "/jadwal",
+        "name" => "Jadwal",
+        "icon" => "menu-icon tf-icons bx bx-calendar",
+        "slug" => ["jadwal", "jadwal.create", "jadwal.edit", "jadwal.show"]
+      ],
+      [
+        "url" => "/ruangan",
+        "name" => "Ruangan",
+        "icon" => "menu-icon tf-icons bx bx-building",
+        "slug" => ["ruangan.index", "ruangan.create", "ruangan.edit", "ruangan.show"]
+      ],
+      [
+        "url" => "/maintenance",
+        "name" => "Maintenance",
+        "icon" => "menu-icon tf-icons bx bx-wrench",
+        "slug" => "maintenance",
+        "submenu" => [
+          [
+            "url" => "/maintenance/proses",
+            "name" => "Proses",
+            "icon" => "menu-icon tf-icons bx bx-loader",
+            "slug" => ["maintenance.proses"]
+          ],
+          [
+            "url" => "/maintenance/selesai",
+            "name" => "Selesai",
+            "icon" => "menu-icon tf-icons bx bx-check-circle",
+            "slug" => ["maintenance.selesai"]
+          ]
+        ]
       ],
       [
         "url" => "/pengaturan",
         "name" => "Pengaturan",
         "icon" => "menu-icon tf-icons bx bx-cog",
-        "slug" => "pengaturan"
+        "slug" => ["pengaturan"]
       ]
     ]
   ];

@@ -59,6 +59,9 @@ class DataBarangController extends Controller
         // Ambil semua data dari request
         $data = $request->all();
         $data['id_ruangan'] = $request->ruangan;
+        if (!isset($data['keterangan']) || $data['keterangan'] === null) {
+            $data['keterangan'] = '';
+        }
     
         // Simpan data barang ke tabel asset
         $asset = Asset::create($data);
@@ -110,17 +113,29 @@ class DataBarangController extends Controller
         $asset = Asset::findOrFail($id);
         $data = $request->all();
         $data['id_ruangan'] = $request->ruangan;
+        if (!isset($data['keterangan']) || $data['keterangan'] === null) {
+            $data['keterangan'] = '';
+        }
         
         // Update data barang
         $asset->update($data);
-    
-        // Jika ada data jadwal terkait, perbarui jadwalnya
+
+        // Update atau buat data jadwal
         if ($asset->jadwals->count() > 0) {
-            // Ambil jadwal pertama (asumsi satu jadwal terkait)
+            // Update jadwal pertama
             $jadwal = $asset->jadwals->first();
             $jadwal->update([
                 'siklus' => $request->siklus,
                 'tanggal_mulai' => $request->tanggal_mulai,
+                'keterangan' => $request->keterangan ?? '',
+            ]);
+        } else {
+            // Buat jadwal baru jika belum ada
+            Jadwal::create([
+                'id_aset' => $asset->id_aset,
+                'siklus' => $request->siklus,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'keterangan' => $request->keterangan ?? '',
             ]);
         }
     

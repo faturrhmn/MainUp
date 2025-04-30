@@ -12,12 +12,7 @@
       "icon": "menu-icon tf-icons bx bx-package",
       "slug": "data-barang"
     },
-    {
-      "url": "/jadwal",
-      "name": "Jadwal",
-      "icon": "menu-icon tf-icons bx bx-calendar",
-      "slug": "jadwal"
-    },
+    
     {
       "url": "/ruangan",
       "name": "Ruangan",
@@ -28,7 +23,21 @@
       "url": "/maintenance",
       "name": "Maintenance",
       "icon": "menu-icon tf-icons bx bx-wrench",
-      "slug": "maintenance"
+      "slug": "maintenance",
+      "submenu": [
+        {
+          "url": "/maintenance/proses",
+          "name": "Proses",
+          "icon": "menu-icon tf-icons bx bx-loader",
+          "slug": "maintenance.proses"
+        },
+        {
+          "url": "/maintenance/selesai",
+          "name": "Selesai",
+          "icon": "menu-icon tf-icons bx bx-check-circle",
+          "slug": "maintenance.selesai"
+        }
+      ]
     },
     {
       "url": "/pengaturan",

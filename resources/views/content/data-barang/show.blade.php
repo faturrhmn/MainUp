@@ -56,4 +56,46 @@
         </div>
     </div>
 </div>
+<!-- History Maintenance -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title fw-bold">History Maintenance</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Tanggal Perbaikan</th>
+                        <th>Status Perbaikan</th>
+                        <th>Keterangan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($asset->jadwals as $jadwal)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d/m/Y') }}</td>
+                        <td>
+                            {{-- Contoh status otomatis, bisa diubah sesuai kebutuhan --}}
+                            @php
+                                $status = now()->lt(\Carbon\Carbon::parse($jadwal->tanggal_mulai)) ? 'Proses' : 'Selesai';
+                            @endphp
+                            {{ $status }}
+                        </td>
+                        <td>{{ $jadwal->keterangan ?? '-' }}</td>
+                        <td>
+                            <button class="btn btn-outline-secondary btn-sm" title="Aksi">
+                                <i class="bx bx-wrench"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">Belum ada history maintenance.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection 
