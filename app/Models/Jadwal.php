@@ -38,13 +38,8 @@ class Jadwal extends Model
         return $this->belongsTo(Asset::class, 'id_aset', 'id_aset');
     }
 
-    public function beforeImages()
+    public function maintenance()
     {
-        return $this->hasMany(\App\Models\BeforeImage::class, 'maintenance_id', 'id_jadwal');
-    }
-
-    public function afterImages()
-    {
-        return $this->hasMany(\App\Models\AfterImage::class, 'maintenance_id', 'id_jadwal');
+        return $this->hasOne(Maintenance::class, 'id_aset', 'id_aset');
     }
 }

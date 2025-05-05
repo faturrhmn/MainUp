@@ -1,10 +1,9 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Maintenance Barang Proccessed')
+@section('title', 'Maintenance Barang Processed')
 
 @section('vendor-style')
 <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-<!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 @endsection
 
@@ -17,7 +16,7 @@
 @section('page-script')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    new DataTable('#assetsTable', {
+    new DataTable('#maintenanceTable', {
         processing: true,
         pageLength: 10,
         language: {
@@ -37,46 +36,23 @@ document.addEventListener('DOMContentLoaded', function() {
         columnDefs: [
             { orderable: true, targets: '_all' }
         ],
-        order: [[0, 'asc']]
+        order: [[3, 'asc']]
     });
 });
 </script>
 @endsection
 
-<style>
-.custom-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
-}
-
-.custom-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-}
-
-.icon-wrapper {
-  background-color: #f5f5f5;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-wrapper i {
-  font-size: 24px;
-  color: #333;
-}
-</style>
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title mb-4 fw-bold">Maintenace Barang Proccessed</h4>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title fw-bold">Maintenance Barang Processed</h4>
+            <a href="{{ url()->previous() }}" class="btn btn-outline-primary">
+                <i class="bx bx-arrow-back"></i> Kembali
+            </a>
+        </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover" id="maintenanceTable">
+            <table id="maintenanceTable" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>Nama Barang</th>
@@ -90,73 +66,59 @@ document.addEventListener('DOMContentLoaded', function() {
                     </tr>
                 </thead>
                 <tbody>
-                @forelse($data as $item)
-   <tr>
-       <td>{{ $item->asset->nama_barang ?? '-' }}</td>
-       <td>{{ $item->asset->merk ?? '-' }}</td>
-       <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
-       <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
-       <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
-       <td>
-           @switch($item->siklus)
-               @case('hari')
-                   Harian
-                   @break
-               @case('minggu')
-                   Mingguan
-                   @break
-               @case('bulan')
-                   Bulanan
-                   @break
-               @case('3_bulan')
-                   3 Bulan
-                   @break
-               @case('6_bulan')
-                   6 Bulan
-                   @break
-               @case('1_tahun')
-                   1 Tahun
-                   @break
-               @default
-                   {{ $item->siklus }}
-           @endswitch
-       </td>
-       <td>
-           @if($item->status_perbaikan)
-               <span class="badge bg-{{ $item->status_perbaikan == 'selesai' ? 'success' : 'warning' }}">
-                   {{ ucfirst($item->status_perbaikan) }}
-               </span>
-           @else
-               <span class="badge bg-info">Belum Diproses</span>
-           @endif
-       </td>
-       <td>
-           <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Proses Maintenance">
-               <i class="bx bx-wrench"></i>
-           </a>
-       </td>
-   </tr>
-   @empty
-   <tr>
-       <td colspan="8" class="text-center">Tidak ada barang yang memerlukan maintenance dalam 7 hari ke depan.</td>
-   </tr>
-   @endforelse
+                @foreach($data as $item)
+                        @php
+                            // Periksa apakah item->asset dan item->asset->maintenances tidak null
+                            $maintenanceProses = $item->asset && $item->asset->maintenances 
+                                ? $item->asset->maintenances->where('status', 'proses')->first()
+                                : null;
+                        @endphp
+                        <tr>
+                            <td>{{ $item->asset->nama_barang ?? '-' }}</td>
+                            <td>{{ $item->asset->merk ?? '-' }}</td>
+                            <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
+                            <td>
+                                @switch($item->siklus)
+                                    @case('hari') Harian @break
+                                    @case('minggu') Mingguan @break
+                                    @case('bulan') Bulanan @break
+                                    @case('3_bulan') 3 Bulan @break
+                                    @case('6_bulan') 6 Bulan @break
+                                    @case('1_tahun') 1 Tahun @break
+                                    @default {{ $item->siklus }}
+                                @endswitch
+                            </td>
+                            <td>
+                                @if($maintenanceProses)
+                                    <span class="badge bg-warning">Proses</span>
+                                @elseif($item->status_perbaikan == 'selesai')
+                                    <span class="badge bg-success">Selesai</span>
+                                @else
+                                    <span class="badge bg-info">Belum Diproses</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($maintenanceProses)
+                                    <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Edit Maintenance (Proses)">
+                                        <i class="bx bx-edit"></i> Edit
+                                    </a>
+                                    <a href="{{ route('maintenance.detail', $maintenanceProses->id_maintenance) }}" class="btn btn-outline-info btn-sm" title="Lihat Detail">
+                                        <i class="bx bx-show"></i> Detail
+                                    </a>
+                                @else
+                                    <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Proses Maintenance">
+                                        <i class="bx bx-wrench"></i>
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-@endsection
-
-@section('page-script')
-<script>
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    let value = this.value.toLowerCase();
-    let rows = document.querySelectorAll('#maintenanceTable tbody tr');
-    rows.forEach(row => {
-        let show = Array.from(row.children).some(td => td.textContent.toLowerCase().includes(value));
-        row.style.display = show ? '' : 'none';
-    });
-});
-</script>
 @endsection

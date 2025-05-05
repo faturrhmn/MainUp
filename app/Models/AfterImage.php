@@ -14,13 +14,13 @@ class AfterImage extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'maintenance_id',
+        'id_maintenance',
         'original_name',
         'hashed_name',
     ];
 
-    public function jadwal()
+    public function maintenance()
     {
-        return $this->belongsTo(Jadwal::class, 'maintenance_id', 'id_jadwal');
+        return $this->belongsTo(Maintenance::class, 'id_maintenance', 'id_maintenance');
     }
-} 
+}

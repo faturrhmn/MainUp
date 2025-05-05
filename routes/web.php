@@ -172,4 +172,4 @@ Route::get('/barang/{id}', [AssetController::class, 'show'])->name('detail-baran
 Route::get('/maintenance/proses', [MaintenanceController::class, 'proses'])->name('maintenance.proses');
 Route::get('/maintenance/selesai', [MaintenanceController::class, 'selesai'])->name('maintenance.selesai');
 Route::get('/maintenance/{id}/edit', [MaintenanceController::class, 'edit'])->name('maintenance.edit');
-Route::put('/maintenance/{id}', [MaintenanceController::class, 'update'])->name('maintenance.update');
+Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
