@@ -16,22 +16,39 @@ class MaintenanceController extends Controller
     public function proses()
     {
         $now = now();
-        $data = Jadwal::with(['asset.ruangan'])
+    
+        $data = Jadwal::with(['asset.ruangan', 'maintenance'])
             ->get()
-            ->map(function($item) {
-                $nextDate = $this->calculateNextMaintenanceDate($item->tanggal_mulai, $item->siklus);
-                $item->next_maintenance_date = $nextDate;
-                return $item;
+            ->map(function ($jadwal) use ($now) {
+                // Ambil maintenance terakhir dengan status selesai
+                $lastFinishedMaintenance = $jadwal->maintenance()
+                    ->where('status', 'selesai')
+                    ->latest('tanggal_perbaikan')
+                    ->first();
+    
+                // Jika belum pernah maintenance selesai, gunakan tanggal_mulai dari jadwal
+                $baseDate = $lastFinishedMaintenance ? $lastFinishedMaintenance->tanggal_perbaikan : $jadwal->tanggal_mulai;
+    
+                // Hitung next maintenance date
+                $nextMaintenanceDate = $this->calculateNextMaintenanceDate($baseDate, $jadwal->siklus);
+    
+                // Simpan hasil hitung ke properti virtual agar bisa dipakai di view
+                $jadwal->next_maintenance_date = $nextMaintenanceDate;
+    
+                // Filter data seperti sebelumnya
+                $sevenDaysBefore = Carbon::parse($nextMaintenanceDate)->subDays(7);
+                $jadwal->show = $now->greaterThanOrEqualTo($sevenDaysBefore);
+    
+                return $jadwal;
             })
-            ->filter(function($item) use ($now) {
-                $nextDate = Carbon::parse($item->next_maintenance_date);
-                $sevenDaysBefore = $nextDate->copy()->subDays(7);
-
-                return $now->between($sevenDaysBefore, $nextDate) || $item->status_perbaikan !== 'selesai';
-            });
-
+            ->filter(function ($jadwal) {
+                return $jadwal->show;
+            })
+            ->values();
+    
         return view('content.maintenance.proses', compact('data'));
     }
+    
 
     private function calculateNextMaintenanceDate($startDate, $cycle)
     {
@@ -51,13 +68,14 @@ class MaintenanceController extends Controller
     {
         $jadwal = Jadwal::with('asset.ruangan')->findOrFail($id);
     
-        // Ambil data maintenance terakhir untuk aset ini dengan status "proses"
-        $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
+        // Load maintenance dan sekaligus before & after images-nya
+        $maintenance = Maintenance::with(['beforeImages', 'afterImages'])
+            ->where('id_aset', $jadwal->id_aset)
             ->where('status', 'proses')
             ->latest('tanggal_perbaikan')
             ->first();
     
-        // Ambil data gambar Before dan After jika ada
+        // Tetap aman jika tidak ada maintenance
         $beforeImages = $maintenance ? $maintenance->beforeImages : [];
         $afterImages = $maintenance ? $maintenance->afterImages : [];
     
@@ -65,7 +83,6 @@ class MaintenanceController extends Controller
     }
     
     
-
     public function store(Request $request)
     {
         $request->validate([
@@ -75,66 +92,108 @@ class MaintenanceController extends Controller
             'before_maintenance' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
             'after_maintenance' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
             'keterangan' => 'nullable|string',
+            'pic' => 'nullable|string|max:255',
+            'teknisi' => 'nullable|string|max:255',
         ]);
-
+    
         $jadwal = Jadwal::findOrFail($request->id_jadwal);
-
-        // Cek apakah sudah ada data maintenance dengan status "proses" untuk aset ini
+    
         $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
             ->where('status', 'proses')
             ->latest('tanggal_perbaikan')
             ->first();
-
+    
         if ($maintenance) {
-            // Update data yang sudah ada
+            // Update existing maintenance
             $maintenance->tanggal_perbaikan = $request->tanggal_perbaikan;
             $maintenance->status = $request->status_perbaikan;
             $maintenance->keterangan = $request->keterangan;
+            $maintenance->pic = $request->pic;
+            $maintenance->teknisi = $request->teknisi;
             $maintenance->save();
         } else {
-            // Jika belum ada, buat data baru
+            // Create new maintenance
             $maintenance = new Maintenance();
             $maintenance->id_aset = $jadwal->id_aset;
             $maintenance->tanggal_perbaikan = $request->tanggal_perbaikan;
             $maintenance->status = $request->status_perbaikan;
             $maintenance->keterangan = $request->keterangan;
+            $maintenance->pic = $request->pic;
+            $maintenance->teknisi = $request->teknisi;
             $maintenance->save();
         }
-
-        // Simpan file before_maintenance jika ada
+    
+        // Upload file before maintenance
         if ($request->hasFile('before_maintenance')) {
             $file = $request->file('before_maintenance');
             $originalName = $file->getClientOriginalName();
             $hashedName = $file->hashName();
-            $file->storeAs('maintenance/before', $hashedName);
-
+            $file->storeAs('maintenance/before', $hashedName, 'public'); // <- PENTING
+    
             BeforeImage::create([
                 'id_maintenance' => $maintenance->id_maintenance,
                 'original_name' => $originalName,
                 'hashed_name' => $hashedName,
             ]);
         }
-
-        // Simpan file after_maintenance jika ada
+    
+        // Upload file after maintenance
         if ($request->hasFile('after_maintenance')) {
             $file = $request->file('after_maintenance');
             $originalName = $file->getClientOriginalName();
             $hashedName = $file->hashName();
-            $file->storeAs('maintenance/after', $hashedName);
-
+            $file->storeAs('maintenance/after', $hashedName, 'public'); // <- PENTING
+    
             AfterImage::create([
                 'id_maintenance' => $maintenance->id_maintenance,
                 'original_name' => $originalName,
                 'hashed_name' => $hashedName,
             ]);
         }
-
+    
         return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
     }
-
+    
     public function selesai()
     {
         $data = Maintenance::with('asset')->where('status', 'selesai')->get();
         return view('content.maintenance.selesai', compact('data'));
     }
+
+    public function prosesProses()
+    {
+    // Ambil semua data maintenance yang statusnya 'proses' beserta relasi jadwal, asset, ruangan
+    $data = Maintenance::with(['jadwal.asset.ruangan'])
+        ->where('status', 'proses')
+        ->get();
+
+    return view('content.maintenance.proses_proses', compact('data'));
+    }
+
+    public function destroyBeforeImage($id)
+    {
+    $image = BeforeImage::findOrFail($id);
+    
+    // Hapus file fisik
+    Storage::disk('public')->delete('maintenance/before/' . $image->hashed_name);
+    
+    // Hapus record di DB
+    $image->delete();
+    
+    return back()->with('success', 'Gambar sebelum perbaikan berhasil dihapus.');
+    }
+
+    public function destroyAfterImage($id)
+    {
+    $image = AfterImage::findOrFail($id);
+    
+    // Hapus file fisik
+    Storage::disk('public')->delete('maintenance/after/' . $image->hashed_name);
+    
+    // Hapus record di DB
+    $image->delete();
+    
+    return back()->with('success', 'Gambar setelah perbaikan berhasil dihapus.');
+    }
+
 }

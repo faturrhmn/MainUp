@@ -67,54 +67,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 </thead>
                 <tbody>
                 @foreach($data as $item)
-                        @php
-                            // Periksa apakah item->asset dan item->asset->maintenances tidak null
-                            $maintenanceProses = $item->asset && $item->asset->maintenances 
-                                ? $item->asset->maintenances->where('status', 'proses')->first()
-                                : null;
-                        @endphp
-                        <tr>
-                            <td>{{ $item->asset->nama_barang ?? '-' }}</td>
-                            <td>{{ $item->asset->merk ?? '-' }}</td>
-                            <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
-                            <td>
-                                @switch($item->siklus)
-                                    @case('hari') Harian @break
-                                    @case('minggu') Mingguan @break
-                                    @case('bulan') Bulanan @break
-                                    @case('3_bulan') 3 Bulan @break
-                                    @case('6_bulan') 6 Bulan @break
-                                    @case('1_tahun') 1 Tahun @break
-                                    @default {{ $item->siklus }}
-                                @endswitch
-                            </td>
-                            <td>
-                                @if($maintenanceProses)
-                                    <span class="badge bg-warning">Proses</span>
-                                @elseif($item->status_perbaikan == 'selesai')
-                                    <span class="badge bg-success">Selesai</span>
-                                @else
-                                    <span class="badge bg-info">Belum Diproses</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($maintenanceProses)
-                                    <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Edit Maintenance (Proses)">
-                                        <i class="bx bx-edit"></i> Edit
-                                    </a>
-                                    <a href="{{ route('maintenance.detail', $maintenanceProses->id_maintenance) }}" class="btn btn-outline-info btn-sm" title="Lihat Detail">
-                                        <i class="bx bx-show"></i> Detail
-                                    </a>
-                                @else
-                                    <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Proses Maintenance">
-                                        <i class="bx bx-wrench"></i>
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
+                    @php
+                    $maintenanceProses = $item->maintenance->where('status', 'proses')->first();
+                @endphp
+                    <tr>
+                        <td>{{ $item->asset->nama_barang ?? '-' }}</td>
+                        <td>{{ $item->asset->merk ?? '-' }}</td>
+                        <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
+                        <td>
+                            @switch($item->siklus)
+                                @case('hari') Harian @break
+                                @case('minggu') Mingguan @break
+                                @case('bulan') Bulanan @break
+                                @case('3_bulan') 3 Bulan @break
+                                @case('6_bulan') 6 Bulan @break
+                                @case('1_tahun') 1 Tahun @break
+                                @default {{ $item->siklus }}
+                            @endswitch
+                        </td>
+                        <td>
+                            @if($maintenanceProses)
+                                <span class="badge bg-warning">Proses</span>
+                            @else
+                                <span class="badge bg-secondary">Belum Diproses</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            @if($maintenanceProses)
+                                <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Edit Maintenance (Proses)">
+                                    <i class="bx bx-edit"></i> Edit
+                                </a>
+                            @else
+                                <a href="{{ route('maintenance.edit', $item->id_jadwal) }}" class="btn btn-outline-secondary btn-sm" title="Proses Maintenance">
+                                    <i class="bx bx-wrench"></i>
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+
 
                 </tbody>
             </table>

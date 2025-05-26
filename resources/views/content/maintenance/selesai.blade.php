@@ -3,9 +3,9 @@
 @section('title', 'Maintenance Barang Selesai')
 
 @section('vendor-style')
-<link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 <!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
 @endsection
 
 @section('vendor-script')
@@ -16,7 +16,7 @@
 
 @section('page-script')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     new DataTable('#maintenanceTable', {
         processing: true,
         pageLength: 10,
@@ -34,9 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 previous: "Sebelumnya"
             }
         },
-        columnDefs: [
-            { orderable: true, targets: '_all' }
-        ],
+        columnDefs: [{ orderable: true, targets: '_all' }],
         order: [[3, 'asc']]
     });
 });
@@ -59,46 +57,38 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Nama Barang</th>
                         <th>Merk</th>
                         <th>Ruangan</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Jadwal Maintenance</th>
-                        <th>Siklus</th>
+                        <th>Tanggal Perbaikan</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                @forelse($data as $item)
-                <tr>
-                    <td>{{ $item->asset->nama_barang ?? '-' }}</td>
-                    <td>{{ $item->asset->merk ?? '-' }}</td>
-                    <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}</td>
-                    <td>
-                        @switch($item->siklus)
-                            @case('hari') Harian @break
-                            @case('minggu') Mingguan @break
-                            @case('bulan') Bulanan @break
-                            @case('3_bulan') 3 Bulan @break
-                            @case('6_bulan') 6 Bulan @break
-                            @case('1_tahun') 1 Tahun @break
-                            @default {{ $item->siklus }}
-                        @endswitch
-                    </td>
-                    <td>
-                        <span class="badge bg-success">Selesai</span>
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-outline-secondary btn-sm" title="Lihat Detail">
-                            <i class="bx bx-show"></i>
-                        </a>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="text-center">Tidak ada barang yang telah selesai maintenance.</td>
-                </tr>
-                @endforelse
+                    @forelse($data as $item)
+                    <tr>
+                        <td>{{ $item->asset->nama_barang ?? '-' }}</td>
+                        <td>{{ $item->asset->merk ?? '-' }}</td>
+                        <td>{{ $item->asset->ruangan->nama_ruangan ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal_perbaikan)->format('d-m-Y') }}</td>
+                        <td>
+                            @if($item->status === 'selesai')
+                                <span class="badge bg-success">Selesai</span>
+                            @else
+                                <span class="badge bg-warning text-dark">{{ ucfirst($item->status) }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="#" 
+                               class="btn btn-outline-secondary btn-sm" 
+                               title="Lihat Detail">
+                                <i class="bx bx-show"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada barang yang telah selesai maintenance.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

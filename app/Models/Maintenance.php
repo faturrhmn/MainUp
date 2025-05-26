@@ -20,6 +20,8 @@ class Maintenance extends Model
         'id_aset',
         'tanggal_perbaikan',
         'keterangan',
+        'pic',
+        'teknisi',
         'status',
         'created_at',
         'updated_at'

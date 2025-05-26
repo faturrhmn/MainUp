@@ -29,12 +29,26 @@
             </div>
             <div class="mb-3">
                 <label for="tanggal_perbaikan" class="form-label">Tanggal Perbaikan</label>
-                <input type="date" name="tanggal_perbaikan" id="tanggal_perbaikan" class="form-control" value="{{ old('tanggal_perbaikan', $maintenance->tanggal_perbaikan ?? '') }}">
+                <input type="date" name="tanggal_perbaikan" id="tanggal_perbaikan"
+                    class="form-control @error('tanggal_perbaikan') is-invalid @enderror"
+                    value="{{ old('tanggal_perbaikan', $maintenance->tanggal_perbaikan ?? '') }}">
+
+                @error('tanggal_perbaikan')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-3">
-                <label for="tanggal_perbaikan" class="form-label">Tanggal Perbaikan</label>
-                <input type="date" name="tanggal_perbaikan" id="tanggal_perbaikan" class="form-control" value="{{ old('tanggal_perbaikan', $maintenance->tanggal_perbaikan ?? '') }}">
+                <label for="pic">PIC</label>
+                <input type="text" name="pic" class="form-control" value="{{ old('pic', $maintenance->pic ?? '') }}">
             </div>
+
+            <div class="mb-3">
+                <label for="teknisi">Teknisi</label>
+                <textarea name="teknisi" class="form-control" rows="3">{{ old('teknisi', $maintenance->teknisi ?? '') }}</textarea>
+            </div>
+
 
             <div class="mb-3">
                 <label for="status_perbaikan" class="form-label">Status Perbaikan</label>
@@ -43,11 +57,11 @@
                     <option value="selesai" {{ old('status_perbaikan', $maintenance->status ?? '') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
             </div>
-
             <div class="mb-3">
                 <label for="keterangan" class="form-label">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" class="form-control">{{ old('keterangan', $maintenance->keterangan ?? '') }}</textarea>
+                <textarea name="keterangan" id="keterangan" class="form-control" oninput="autoResize(this)">{{ old('keterangan', $maintenance->keterangan ?? '') }}</textarea>
             </div>
+
 
             <div class="mb-3">
                 <label for="before_maintenance" class="form-label">Gambar Sebelum Perbaikan</label>
@@ -56,7 +70,7 @@
                     <div class="mt-3">
                         <h5>Gambar Sebelumnya:</h5>
                         @foreach($beforeImages as $image)
-                            <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" alt="Before Image" class="img-fluid" style="max-width: 200px;">
+                        <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" alt="Before Image" class="img-fluid" style="max-width: 200px;">
                         @endforeach
                     </div>
                 @endif
@@ -69,7 +83,8 @@
                     <div class="mt-3">
                         <h5>Gambar Setelah:</h5>
                         @foreach($afterImages as $image)
-                            <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" alt="After Image" class="img-fluid" style="max-width: 200px;">
+                        <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" alt="After Image" class="img-fluid" style="max-width: 200px;">
+
                         @endforeach
                     </div>
                 @endif
@@ -79,4 +94,18 @@
         </form>
     </div>
 </div>
+
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto'; // Reset height
+        textarea.style.height = textarea.scrollHeight + 'px'; // Set new height
+    }
+
+    // Auto-resize saat halaman dimuat (jika ada nilai awal)
+    window.addEventListener('DOMContentLoaded', function () {
+        const textarea = document.getElementById('keterangan');
+        if (textarea) autoResize(textarea);
+    });
+</script>
+
 @endsection

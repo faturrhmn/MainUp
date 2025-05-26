@@ -40,6 +40,6 @@ class Jadwal extends Model
 
     public function maintenance()
     {
-        return $this->hasOne(Maintenance::class, 'id_aset', 'id_aset');
+        return $this->hasMany(Maintenance::class, 'id_aset', 'id_aset');
     }
 }
