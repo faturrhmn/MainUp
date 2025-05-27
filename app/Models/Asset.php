@@ -31,5 +31,9 @@ class Asset extends Model
     {
         return $this->hasMany(Jadwal::class, 'id_aset');
     }
+    public function maintenance()
+{
+    return $this->hasMany(Maintenance::class, 'id_aset', 'id_aset');
+}
 
 } 

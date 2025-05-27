@@ -158,7 +158,6 @@ class MaintenanceController extends Controller
         return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
     }
     
-    
     public function selesai()
     {
         $data = Maintenance::with('asset')->where('status', 'selesai')->get();
@@ -207,5 +206,15 @@ class MaintenanceController extends Controller
         return redirect()->back()->with('success', 'Gambar setelah perbaikan berhasil dihapus.');
     }
     
+    public function detail($id_maintenance)
+    {
+        $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
+    
+        return view('content.maintenance.detail', compact('maintenance'));
+    }
+    
+    
+    
+
 
 }

@@ -179,3 +179,6 @@ Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('main
 Route::post('/maintenance/before-image/delete-batch', [MaintenanceController::class, 'destroyBeforeImagesBatch'])->name('maintenance.before_image.batch_destroy');
 
 Route::post('/maintenance/after-image/delete-batch', [MaintenanceController::class, 'destroyAfterImagesBatch'])->name('maintenance.after_image.batch_destroy');
+
+Route::get('/maintenance/{id_maintenance}/detail', [MaintenanceController::class, 'detail'])
+     ->name('maintenance.detail');

@@ -46,9 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title fw-bold">Maintenance Barang Selesai</h4>
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary">
-                <i class="bx bx-arrow-back"></i> Kembali
-            </a>
         </div>
         <div class="table-responsive">
             <table id="maintenanceTable" class="table table-striped" style="width:100%">
@@ -77,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             @endif
                         </td>
                         <td>
-                            <a href="#" 
-                               class="btn btn-outline-secondary btn-sm" 
-                               title="Lihat Detail">
-                                <i class="bx bx-show"></i>
-                            </a>
+                        <a href="{{ route('maintenance.detail', ['id_maintenance' => $item->id_maintenance]) }}"
+                        class="btn btn-outline-secondary btn-sm" 
+                        title="Lihat Detail">
+                            <i class="bx bx-show"></i>
+                        </a>
                         </td>
                     </tr>
                     @empty

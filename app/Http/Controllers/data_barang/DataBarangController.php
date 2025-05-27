@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\Ruangan;
 use App\Models\Jadwal;
+use App\Models\Maintenance;
 use Illuminate\Http\Request;
 
 class DataBarangController extends Controller
@@ -19,14 +20,14 @@ class DataBarangController extends Controller
     }
 
 
-    public function show($id)   
+    // Di Controller
+    public function show($id)
     {
-        // Ambil asset dengan relasi room dan jadwal
-        $asset = Asset::with('ruangan', 'jadwals')->findOrFail($id); // Menampilkan jadwal terkait
-
-        // Kirim data asset ke view
+        $asset = Asset::with(['ruangan', 'maintenance'])->findOrFail($id);
         return view('content.data-barang.show', compact('asset'));
     }
+    
+
 
 
     public function create()

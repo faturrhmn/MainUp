@@ -56,6 +56,8 @@
         </div>
     </div>
 </div>
+
+<!-- History Maintenance -->
 <!-- History Maintenance -->
 <div class="card mt-4">
     <div class="card-body">
@@ -71,21 +73,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($asset->jadwals as $jadwal)
+                    @forelse($asset->maintenance as $maint)
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($maint->tanggal_perbaikan)->format('d/m/Y') }}</td>
+                        <td>{{ $maint->status ?? '-' }}</td>
+                        <td>{{ $maint->keterangan ?? '-' }}</td>
                         <td>
-                            {{-- Contoh status otomatis, bisa diubah sesuai kebutuhan --}}
-                            @php
-                                $status = now()->lt(\Carbon\Carbon::parse($jadwal->tanggal_mulai)) ? 'Proses' : 'Selesai';
-                            @endphp
-                            {{ $status }}
-                        </td>
-                        <td>{{ $jadwal->keterangan ?? '-' }}</td>
-                        <td>
-                            <button class="btn btn-outline-secondary btn-sm" title="Aksi">
-                                <i class="bx bx-wrench"></i>
-                            </button>
+                            <a href="{{ route('maintenance.detail', ['id_maintenance' => $maint->id_maintenance]) }}" 
+                               class="btn btn-outline-secondary btn-sm" 
+                               title="Lihat Detail Maintenance">
+                                <i class="bx bx-show"></i>
+                            </a>
                         </td>
                     </tr>
                     @empty
@@ -98,4 +96,5 @@
         </div>
     </div>
 </div>
-@endsection 
+
+@endsection
