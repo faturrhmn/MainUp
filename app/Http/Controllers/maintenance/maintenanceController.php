@@ -85,19 +85,21 @@ class MaintenanceController extends Controller
     
     public function store(Request $request)
     {
+        // Validasi input termasuk multiple files (array)
         $request->validate([
             'id_jadwal' => 'required|exists:jadwal,id_jadwal',
             'tanggal_perbaikan' => 'required|date',
             'status_perbaikan' => 'required|in:proses,selesai',
-            'before_maintenance' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
-            'after_maintenance' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
-            'keterangan' => 'nullable|string',
-            'pic' => 'nullable|string|max:255',
-            'teknisi' => 'nullable|string|max:255',
+            'before_maintenance.*' => 'file',
+            'after_maintenance.*' => 'file',
+            'pic' => 'nullable|string|max:255',      
+            'teknisi' => 'nullable|string',            
+            'keterangan' => 'nullable|string',  
         ]);
     
         $jadwal = Jadwal::findOrFail($request->id_jadwal);
     
+        // Cari maintenance yang statusnya proses untuk aset ini
         $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
             ->where('status', 'proses')
             ->latest('tanggal_perbaikan')
@@ -123,36 +125,39 @@ class MaintenanceController extends Controller
             $maintenance->save();
         }
     
-        // Upload file before maintenance
+        // Upload multiple files sebelum maintenance
         if ($request->hasFile('before_maintenance')) {
-            $file = $request->file('before_maintenance');
-            $originalName = $file->getClientOriginalName();
-            $hashedName = $file->hashName();
-            $file->storeAs('maintenance/before', $hashedName, 'public'); // <- PENTING
+            foreach ($request->file('before_maintenance') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $hashedName = $file->hashName();
+                $file->storeAs('maintenance/before', $hashedName, 'public');
     
-            BeforeImage::create([
-                'id_maintenance' => $maintenance->id_maintenance,
-                'original_name' => $originalName,
-                'hashed_name' => $hashedName,
-            ]);
+                BeforeImage::create([
+                    'id_maintenance' => $maintenance->id_maintenance,
+                    'original_name' => $originalName,
+                    'hashed_name' => $hashedName,
+                ]);
+            }
         }
     
-        // Upload file after maintenance
+        // Upload multiple files setelah maintenance
         if ($request->hasFile('after_maintenance')) {
-            $file = $request->file('after_maintenance');
-            $originalName = $file->getClientOriginalName();
-            $hashedName = $file->hashName();
-            $file->storeAs('maintenance/after', $hashedName, 'public'); // <- PENTING
+            foreach ($request->file('after_maintenance') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $hashedName = $file->hashName();
+                $file->storeAs('maintenance/after', $hashedName, 'public');
     
-            AfterImage::create([
-                'id_maintenance' => $maintenance->id_maintenance,
-                'original_name' => $originalName,
-                'hashed_name' => $hashedName,
-            ]);
+                AfterImage::create([
+                    'id_maintenance' => $maintenance->id_maintenance,
+                    'original_name' => $originalName,
+                    'hashed_name' => $hashedName,
+                ]);
+            }
         }
     
         return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
     }
+    
     
     public function selesai()
     {
@@ -170,30 +175,37 @@ class MaintenanceController extends Controller
     return view('content.maintenance.proses_proses', compact('data'));
     }
 
-    public function destroyBeforeImage($id)
+    public function destroyBeforeImagesBatch(Request $request)
     {
-    $image = BeforeImage::findOrFail($id);
-    
-    // Hapus file fisik
-    Storage::disk('public')->delete('maintenance/before/' . $image->hashed_name);
-    
-    // Hapus record di DB
-    $image->delete();
-    
-    return back()->with('success', 'Gambar sebelum perbaikan berhasil dihapus.');
+        $imageIds = $request->input('image_ids', []);
+        if (!empty($imageIds)) {
+            foreach ($imageIds as $id) {
+                $image = BeforeImage::find($id);
+                if ($image) {
+                    // Hapus file di storage
+                    Storage::delete('maintenance/before/' . $image->hashed_name);
+                    // Hapus data di DB
+                    $image->delete();
+                }
+            }
+        }
+        return redirect()->back()->with('success', 'Gambar sebelum perbaikan berhasil dihapus.');
     }
-
-    public function destroyAfterImage($id)
+    
+    public function destroyAfterImagesBatch(Request $request)
     {
-    $image = AfterImage::findOrFail($id);
-    
-    // Hapus file fisik
-    Storage::disk('public')->delete('maintenance/after/' . $image->hashed_name);
-    
-    // Hapus record di DB
-    $image->delete();
-    
-    return back()->with('success', 'Gambar setelah perbaikan berhasil dihapus.');
+        $imageIds = $request->input('image_ids', []);
+        if (!empty($imageIds)) {
+            foreach ($imageIds as $id) {
+                $image = AfterImage::find($id);
+                if ($image) {
+                    Storage::delete('maintenance/after/' . $image->hashed_name);
+                    $image->delete();
+                }
+            }
+        }
+        return redirect()->back()->with('success', 'Gambar setelah perbaikan berhasil dihapus.');
     }
+    
 
 }

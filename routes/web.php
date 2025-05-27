@@ -174,5 +174,8 @@ Route::get('/maintenance/selesai', [MaintenanceController::class, 'selesai'])->n
 Route::get('/maintenance/{id}/edit', [MaintenanceController::class, 'edit'])->name('maintenance.edit');
 Route::post('/maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
 
-Route::delete('/maintenance/before-image/{id}', [MaintenanceController::class, 'destroyBeforeImage'])->name('maintenance.before_image.destroy');
-Route::delete('/maintenance/after-image/{id}', [MaintenanceController::class, 'destroyAfterImage'])->name('maintenance.after_image.destroy');
+// routes/web.php
+
+Route::post('/maintenance/before-image/delete-batch', [MaintenanceController::class, 'destroyBeforeImagesBatch'])->name('maintenance.before_image.batch_destroy');
+
+Route::post('/maintenance/after-image/delete-batch', [MaintenanceController::class, 'destroyAfterImagesBatch'])->name('maintenance.after_image.batch_destroy');
