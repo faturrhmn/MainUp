@@ -16,6 +16,9 @@
         <form action="{{ route('maintenance.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="id_jadwal" value="{{ $jadwal->id_jadwal }}">
+            @if(isset($maintenance))
+                <input type="hidden" name="id_maintenance" value="{{ $maintenance->id_maintenance }}">
+            @endif
 
             <div class="row">
                 <!-- Kolom kiri -->
@@ -74,17 +77,26 @@
                         <input type="text" name="pic" id="pic"
                             class="form-control @error('pic') is-invalid @enderror"
                             value="{{ old('pic', $maintenance->pic ?? '') }}">
+                        @error('pic')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="teknisi" class="form-label">Teknisi</label>
                         <textarea name="teknisi" id="teknisi"
                             class="form-control @error('teknisi') is-invalid @enderror" rows="3">{{ old('teknisi', $maintenance->teknisi ?? '') }}</textarea>
+                        @error('teknisi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <textarea name="keterangan" id="keterangan"
                             class="form-control @error('keterangan') is-invalid @enderror"
                             oninput="autoResize(this)">{{ old('keterangan', $maintenance->keterangan ?? '') }}</textarea>
+                        @error('keterangan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">

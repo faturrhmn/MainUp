@@ -6,7 +6,11 @@
 <div class="card">
     <div class="card-body">
     <div class="d-flex justify-content-end mt-4">
-            <x-export-buttons route="export.maintenance.detail" :params="['id_maintenance' => $maintenance->id_maintenance]" />
+{{--            <x-export-buttons route="export.maintenance.detail" :params="['id_maintenance' => $maintenance->id_maintenance]" />--}}
+             <a href="{{ route('export.maintenance.detail', ['id_maintenance' => $maintenance->id_maintenance, 'type' => 'pdf']) }}" class="btn btn-danger" id="pdfBtn-export.maintenance.detail">
+                <i class="bx bxs-file-pdf me-1"></i>
+                Export PDF
+            </a>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title fw-bold">Detail Maintenance</h4>

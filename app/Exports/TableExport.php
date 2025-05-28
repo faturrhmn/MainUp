@@ -30,6 +30,12 @@ class TableExport implements FromArray, WithHeadings, WithStyles
 
     public function styles(Worksheet $sheet)
     {
+        // Add border to all cells with data
+        $sheet->getStyle('A1:' . $sheet->getHighestColumn() . $sheet->getHighestRow())
+              ->getBorders()
+              ->getAllBorders()
+              ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
         return [
             1 => ['font' => ['bold' => true]],
         ];

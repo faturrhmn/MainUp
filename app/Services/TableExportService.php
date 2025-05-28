@@ -5,6 +5,7 @@ namespace App\Services;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Collection;
+use App\Exports\TableExport;
 
 class TableExportService
 {
@@ -37,27 +38,6 @@ class TableExportService
      */
     public function exportToExcel(array $headers, array $data, string $filename = 'export.xlsx')
     {
-        $collection = new Collection($data);
-        
-        return Excel::download(new class($headers, $collection) implements \Maatwebsite\Excel\Concerns\FromCollection {
-            protected $headers;
-            protected $data;
-
-            public function __construct($headers, $data)
-            {
-                $this->headers = $headers;
-                $this->data = $data;
-            }
-
-            public function collection()
-            {
-                return $this->data;
-            }
-
-            public function headings(): array
-            {
-                return $this->headers;
-            }
-        }, $filename);
+        return Excel::download(new TableExport($headers, $data), $filename);
     }
 } 

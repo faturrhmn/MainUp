@@ -66,6 +66,18 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
+        /* Added CSS to remove header table borders */
+        .header-table {
+            border-collapse: collapse;
+            border: none;
+            width: 100%;
+        }
+
+        .header-table td {
+            border: none;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>

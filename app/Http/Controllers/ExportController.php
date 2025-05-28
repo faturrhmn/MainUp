@@ -200,11 +200,11 @@ class ExportController extends Controller
     public function exportAssets(Request $request)
     {
         $assets = Asset::with('ruangan')->get();
-        $headers = ['ID', 'Nama Barang', 'Merk', 'Tahun', 'Jumlah', 'Tipe', 'Ruangan', 'Keterangan'];
+        $headers = ['NO', 'Nama Barang', 'Merk', 'Tahun', 'Jumlah', 'Tipe', 'Ruangan', 'Keterangan'];
         
-        $data = $assets->map(function ($item) {
+        $data = $assets->map(function ($item, $key) {
             return [
-                $item->id,
+                $key + 1,
                 $item->nama_barang,
                 $item->merk,
                 $item->tahun,
@@ -220,7 +220,10 @@ class ExportController extends Controller
         if ($request->type === 'pdf') {
             $options = $this->getBase64Logos();
             $options['judul'] = $judul;
-            return $this->tableExportService->exportToPdf($headers, $data, 'assets.pdf', $options);
+            
+            return PDF::loadView('exports.table-pdf', array_merge(['headers' => $headers, 'data' => $data], $options))
+                       ->setPaper('a4', 'portrait')
+                       ->stream('data_barang.pdf');
         }
         
         return $this->tableExportService->exportToExcel($headers, $data, 'assets.xlsx');
@@ -287,15 +290,15 @@ class ExportController extends Controller
      */
     public function exportDetailMaintenance(int $id_maintenance, Request $request)
     {
-        $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
+        $maintenance = Maintenance::with(['asset.ruangan', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
 
         // Encode gambar maintenance ke Base64
         $beforeImagesEncoded = $maintenance->beforeImages->map(function($image) {
             $path = Storage::path('maintenance/before/' . $image->hashed_name);
-            if (Storage::exists('maintenance/before/' . $image->hashed_name)) {
+             if (Storage::disk('public')->exists('maintenance/before/' . $image->hashed_name)) {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
                  $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type); // Handle jpg sebagai jpeg
-                $data = Storage::get('maintenance/before/' . $image->hashed_name);
+                $data = Storage::disk('public')->get('maintenance/before/' . $image->hashed_name);
                 $base64 = 'data:' . $mime_type . ';base64,' . base64_encode($data);
                 return ['base64' => $base64, 'keterangan' => $image->keterangan];
             } else {
@@ -305,10 +308,10 @@ class ExportController extends Controller
 
         $afterImagesEncoded = $maintenance->afterImages->map(function($image) {
              $path = Storage::path('maintenance/after/' . $image->hashed_name);
-            if (Storage::exists('maintenance/after/' . $image->hashed_name)) {
+            if (Storage::disk('public')->exists('maintenance/after/' . $image->hashed_name)) {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
                  $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type); // Handle jpg sebagai jpeg
-                $data = Storage::get('maintenance/after/' . $image->hashed_name);
+                $data = Storage::disk('public')->get('maintenance/after/' . $image->hashed_name);
                 $base64 = 'data:' . $mime_type . ';base64,' . base64_encode($data);
                 return ['base64' => $base64, 'keterangan' => $image->keterangan];
             } else {
@@ -317,35 +320,16 @@ class ExportController extends Controller
         });
 
        
-        // Encode logo RRI dan MainUp ke Base64
-        $logoRriPath = public_path('assets/rri.png');
-        $logoMainupPath = public_path('assets/logo mainup.png');
-
-        $logoRriBase64 = null;
-        if (file_exists($logoRriPath)) {
-            $type = pathinfo($logoRriPath, PATHINFO_EXTENSION);
-            $data = file_get_contents($logoRriPath);
-            $logoRriBase64 = 'data:image/' . ($type === 'jpg' ? 'jpeg' : $type) . ';base64,' . base64_encode($data);
-        } else {
-            Log::warning('Logo RRI not found at: ' . $logoRriPath);
-        }
-
-        $logoMainupBase64 = null;
-        if (file_exists($logoMainupPath)) {
-             $type = pathinfo($logoMainupPath, PATHINFO_EXTENSION);
-            $data = file_get_contents($logoMainupPath);
-            $logoMainupBase64 = 'data:image/' . ($type === 'jpg' ? 'jpeg' : $type) . ';base64,' . base64_encode($data);
-        } else {
-            Log::warning('Logo MainUp not found at: ' . $logoMainupPath);
-        }
+        // Encode logo RRI dan MainUp ke Base64 (menggunakan helper function)
+        $logoData = $this->getBase64Logos();
 
         $data = [
             'maintenance' => $maintenance,
             'asset' => $maintenance->asset,
             'beforeImages' => $beforeImagesEncoded,
             'afterImages' => $afterImagesEncoded,
-            'logoRriBase64' => $logoRriBase64,
-            'logoMainupBase64' => $logoMainupBase64,
+            'logoRriBase64' => $logoData['logoRriBase64'],
+            'logoMainupBase64' => $logoData['logoMainupBase64'],
         ];
 
         if ($request->type === 'pdf') {
@@ -355,48 +339,7 @@ class ExportController extends Controller
                        ->stream('detail_maintenance_' . $id_maintenance . '.pdf');
         }
         
-        // Export Excel untuk detail maintenance (gambar tidak bisa dimasukkan langsung)
-        // Kita akan export data tekstual saja
-        $excelData = [
-            'Informasi Barang' => [
-                ['Nama Barang', $maintenance->asset->nama_barang ?? '-'],
-                ['Merk', $maintenance->asset->merk ?? '-'],
-                ['Tahun', $maintenance->asset->tahun ?? '-'],
-            ],
-            'Detail Maintenance' => [
-                ['Tanggal Perbaikan', $maintenance->tanggal_perbaikan ?? '-'],
-                ['Status', $maintenance->status ?? '-'],
-                ['PIC', $maintenance->pic ?? '-'],
-                ['Teknisi', $maintenance->teknisi ?? '-'],
-                ['Keterangan', $maintenance->keterangan ?? '-'],
-            ],
-            'Before Images' => $maintenance->beforeImages->map(function($image) {
-                return [
-                    'ID Gambar' => $image->id,
-                    'Keterangan' => $image->keterangan,
-                    'Tanggal Upload' => $image->created_at->format('d/m/Y H:i'),
-                    // URL Gambar tidak bisa langsung di Excel dengan library ini secara mudah
-                ];
-            })->toArray(),
-            'After Images' => $maintenance->afterImages->map(function($image) {
-                 return [
-                    'ID Gambar' => $image->id,
-                    'Keterangan' => $image->keterangan,
-                    'Tanggal Upload' => $image->created_at->format('d/m/Y H:i'),
-                    // URL Gambar tidak bisa dimasukkan langsung
-                ];
-            })->toArray(),
-        ];
-
-         // Perlu membuat Export class terpisah untuk struktur data ini jika ingin lebih rapi di Excel
-         // Untuk saat ini, kita bisa export data tekstual saja ke satu sheet atau beberapa sheet
-         // Karena struktur datanya kompleks (nested), export ke Excel mungkin perlu penanganan khusus
-         // Untuk sementara, kita bisa kembalikan error atau hanya export ringkasan data tekstual
-
-        // Karena kompleksitas export struktur nested + gambar ke Excel dengan library ini,
-        // kita akan fokus pada export PDF yang bisa menyertakan gambar dengan mudah.
-        // Untuk Excel, mungkin hanya data utama maintenance dan aset yang bisa diexport.
-
-        return response()->json(['message' => 'Export Excel untuk detail maintenance belum didukung penuh. Silakan gunakan export PDF.'], 400);
+        // Remove Excel export logic for detail maintenance
+        return redirect()->back()->with('error', 'Ekspor Excel tidak tersedia untuk detail maintenance ini.');
     }
 } 

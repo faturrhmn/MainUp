@@ -97,11 +97,16 @@ class MaintenanceController extends Controller
     
         $jadwal = Jadwal::findOrFail($request->id_jadwal);
     
-        // Cari maintenance yang statusnya proses untuk aset ini
-        $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
-            ->where('status', 'proses')
-            ->latest('tanggal_perbaikan')
-            ->first();
+        // Check if we're updating an existing maintenance record
+        if ($request->has('id_maintenance')) {
+            $maintenance = Maintenance::findOrFail($request->id_maintenance);
+        } else {
+            // Cari maintenance yang statusnya proses untuk aset ini
+            $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
+                ->where('status', 'proses')
+                ->latest('tanggal_perbaikan')
+                ->first();
+        }
     
         if ($maintenance) {
             // Update existing maintenance
@@ -179,10 +184,13 @@ class MaintenanceController extends Controller
             foreach ($imageIds as $id) {
                 $image = BeforeImage::find($id);
                 if ($image) {
+                    // Delete physical file from storage
                     $filePath = 'maintenance/before/' . $image->hashed_name;
                     if (Storage::disk('public')->exists($filePath)) {
                         Storage::disk('public')->delete($filePath);
                     }
+                    
+                    // Delete database record
                     $image->delete();
                 }
             }
@@ -197,10 +205,13 @@ class MaintenanceController extends Controller
             foreach ($imageIds as $id) {
                 $image = AfterImage::find($id);
                 if ($image) {
+                    // Delete physical file from storage
                     $filePath = 'maintenance/after/' . $image->hashed_name;
                     if (Storage::disk('public')->exists($filePath)) {
                         Storage::disk('public')->delete($filePath);
                     }
+                    
+                    // Delete database record
                     $image->delete();
                 }
             }
