@@ -1,28 +1,70 @@
-/.phpunit.cache
-/node_modules
-
-/public/build
-/public/hot
-/public/storage
-/storage/*.key
+# Composer dependencies
 /vendor
 
-# .env
+# Node modules
+/node_modules
+
+# Laravel environment files
+.env
+.env.*
+!.env.example
 .env.backup
 .env.production
+
+# Laravel caches and compiled files
+/storage/*.key
+/storage/app/public
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+/bootstrap/cache
+/public/storage
+
+# PHPUnit
 .phpunit.result.cache
+/.phpunit.cache
 
+# Laravel Mix
+/public/hot
+/public/build
+
+# Frontend assets
+/public/css
+/public/js
+
+# Only keep specific public/assets
+!/public/assets
+!/public/assets/**
+
+# IDEs and editor folders
+/.idea
+/.vscode
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker and Homestead
 docker-compose.override.yml
-
 Homestead.json
 Homestead.yaml
+
+# Misc
 npm-debug.log
 yarn-error.log
 /.fleet
-/.idea
-/.vscode
 
-!/public/assets
-!/public/assets/*
-/public/css
-/public/js
+# Laravel Telescope (if used)
+storage/telescope
+
+# Laravel Horizon log (if used)
+horizon.log
+
+# Ignored database backups or uploads (optional)
+/database/*.sqlite
+/storage/app/*.zip
+/storage/app/backups/*
