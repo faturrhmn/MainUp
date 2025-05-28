@@ -1,21 +1,28 @@
-@extends('layouts/commonMaster' )
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @extends('layouts/commonMaster' )
 
-@php
-/* Display elements */
-$contentNavbar = true;
-$containerNav = ($containerNav ?? 'container-xxl');
-$isNavbar = ($isNavbar ?? true);
-$isMenu = ($isMenu ?? true);
-$isFlex = ($isFlex ?? false);
-$isFooter = ($isFooter ?? true);
+    @php
+    /* Display elements */
+    $contentNavbar = true;
+    $containerNav = ($containerNav ?? 'container-xxl');
+    $isNavbar = ($isNavbar ?? true);
+    $isMenu = ($isMenu ?? true);
+    $isFlex = ($isFlex ?? false);
+    $isFooter = ($isFooter ?? true);
 
-/* HTML Classes */
-$navbarDetached = 'navbar-detached';
+    /* HTML Classes */
+    $navbarDetached = 'navbar-detached';
 
-/* Content classes */
-$container = ($container ?? 'container-xxl');
+    /* Content classes */
+    $container = ($container ?? 'container-xxl');
 
-@endphp
+    @endphp
+</head>
 
 @section('layoutContent')
 <div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
@@ -71,3 +78,9 @@ $container = ($container ?? 'container-xxl');
   </div>
   <!-- / Layout wrapper -->
   @endsection
+
+@stack('scripts')
+
+</body>
+
+</html>

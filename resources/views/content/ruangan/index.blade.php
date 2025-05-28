@@ -96,6 +96,7 @@ $(document).ready(function() {
                                 <a href="{{ route('ruangan.create') }}" class="btn btn-primary">
                                     <i class="bx bx-plus me-1"></i> Tambah Ruangan
                                 </a>
+                                <x-export-buttons route="export.ruangan" />
                             </div>
                         </div>
                         <form id="delete-form" action="{{ route('ruangan.destroy-multiple') }}" method="POST">

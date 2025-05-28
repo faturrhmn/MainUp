@@ -96,6 +96,7 @@ $(document).ready(function() {
                                 <a href="{{ route('data-barang.create') }}" class="btn btn-primary">
                                     <i class="bx bx-plus me-1"></i> Tambah Data
                                 </a>
+                                <x-export-buttons route="export.assets" />
                             </div>
                         </div>
 

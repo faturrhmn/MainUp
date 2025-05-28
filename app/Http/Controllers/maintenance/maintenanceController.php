@@ -71,7 +71,6 @@ class MaintenanceController extends Controller
         // Load maintenance dan sekaligus before & after images-nya
         $maintenance = Maintenance::with(['beforeImages', 'afterImages'])
             ->where('id_aset', $jadwal->id_aset)
-            ->where('status', 'proses')
             ->latest('tanggal_perbaikan')
             ->first();
     

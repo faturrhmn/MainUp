@@ -113,15 +113,23 @@
                 @csrf
                 <h5>Gambar Sebelum Perbaikan:</h5>
                 <div class="mb-3">
-                    @foreach($beforeImages as $image)
+                    @forelse($beforeImages as $image)
                         <label class="d-inline-block position-relative me-3 mb-3" style="max-width: 200px; cursor: pointer;">
-                            <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" alt="Before Image" class="img-fluid"  style="width: 200px; height: 150px; object-fit: cover; display: block;">
+                            <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" 
+                                 alt="Before Image" 
+                                 class="img-fluid"  
+                                 style="width: 200px; height: 150px; object-fit: cover; display: block;"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
                             <input type="checkbox" name="image_ids[]" value="{{ $image->id }}" class="form-check-input position-absolute top-0 start-0 m-2">
                         </label>
-                    @endforeach
+                    @empty
+                        <p class="text-muted">Tidak ada gambar sebelum perbaikan</p>
+                    @endforelse
                 </div>
                 <button type="submit" class="btn btn-danger">Hapus Gambar Sebelum Terpilih</button>
             </form>
+        @else
+            <p class="text-muted">Tidak ada gambar sebelum perbaikan</p>
         @endif
 
         <hr>
@@ -132,15 +140,23 @@
                 @csrf
                 <h5>Gambar Setelah Perbaikan:</h5>
                 <div class="mb-3">
-                    @foreach($afterImages as $image)
+                    @forelse($afterImages as $image)
                         <label class="d-inline-block position-relative me-3 mb-3" style="max-width: 200px; cursor: pointer;">
-                            <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" alt="After Image" class="img-fluid"  style="width: 200px; height: 150px; object-fit: cover; display: block;">
+                            <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" 
+                                 alt="After Image" 
+                                 class="img-fluid"  
+                                 style="width: 200px; height: 150px; object-fit: cover; display: block;"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
                             <input type="checkbox" name="image_ids[]" value="{{ $image->id }}" class="form-check-input position-absolute top-0 start-0 m-2">
                         </label>
-                    @endforeach
+                    @empty
+                        <p class="text-muted">Tidak ada gambar setelah perbaikan</p>
+                    @endforelse
                 </div>
                 <button type="submit" class="btn btn-danger">Hapus Gambar Setelah Terpilih</button>
             </form>
+        @else
+            <p class="text-muted">Tidak ada gambar setelah perbaikan</p>
         @endif
     </div>
 </div>

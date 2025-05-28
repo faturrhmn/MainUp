@@ -131,7 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="d-flex align-items-end row">
                 <div class="col-sm-12">
                     <div class="card-body">
+                    <div class="d-flex justify-content-end mb-3">
+{{--                            <x-export-buttons route="export.assets" />--}}
+                        </div>
                         <h5 class="card-title text-primary">Daftar Aset</h5>
+                        
                         <div class="table-responsive">
                             <table id="assetsTable" class="table table-striped" style="width:100%">
                                 <thead>

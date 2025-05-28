@@ -49,6 +49,7 @@ use App\Http\Controllers\pengaturan\PengaturanController;
 use App\Http\Controllers\ruangan\RuanganController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\maintenance\MaintenanceController;
+use App\Http\Controllers\ExportController;
 
 
 // Main Page Route
@@ -182,3 +183,15 @@ Route::post('/maintenance/after-image/delete-batch', [MaintenanceController::cla
 
 Route::get('/maintenance/{id_maintenance}/detail', [MaintenanceController::class, 'detail'])
      ->name('maintenance.detail');
+
+Route::get('/export/maintenance/detail/{id_maintenance}', [ExportController::class, 'exportDetailMaintenance'])->name('export.maintenance.detail');
+
+// Export Routes
+Route::get('/export/users', [ExportController::class, 'exportUsers'])->name('export.users');
+Route::get('/export/roles', [ExportController::class, 'exportRoles'])->name('export.roles');
+Route::get('/export/ruangan', [ExportController::class, 'exportRuangan'])->name('export.ruangan');
+Route::get('/export/jadwal', [ExportController::class, 'exportJadwal'])->name('export.jadwal');
+Route::get('/export/maintenance', [ExportController::class, 'exportMaintenance'])->name('export.maintenance');
+Route::get('/export/assets', [ExportController::class, 'exportAssets'])->name('export.assets');
+Route::get('/export/before-images', [ExportController::class, 'exportBeforeImages'])->name('export.before-images');
+Route::get('/export/after-images', [ExportController::class, 'exportAfterImages'])->name('export.after-images');

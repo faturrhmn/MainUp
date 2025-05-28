@@ -5,10 +5,13 @@
 @section('content')
 <div class="card">
     <div class="card-body">
+    <div class="d-flex justify-content-end mt-4">
+            <x-export-buttons route="export.maintenance.detail" :params="['id_maintenance' => $maintenance->id_maintenance]" />
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title fw-bold">Detail Maintenance</h4>
         </div>
-
+        
         <!-- Detail Barang -->
         <div class="row mb-4">
             <div class="col-md-6">
@@ -35,9 +38,9 @@
 
         <hr>
 
+        <h5 class="card-title text-primary mt-4">Before Images</h5>
         <!-- Gambar Sebelum Perbaikan -->
         @if($maintenance->beforeImages && $maintenance->beforeImages->count())
-            <h6 class="fw-bold">Gambar Sebelum Perbaikan:</h6>
             <div class="mb-4">
                 @foreach($maintenance->beforeImages as $image)
                     <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
@@ -50,9 +53,9 @@
             </div>
         @endif
 
+        <h5 class="card-title text-primary mt-4">After Images</h5>
         <!-- Gambar Setelah Perbaikan -->
         @if($maintenance->afterImages && $maintenance->afterImages->count())
-            <h6 class="fw-bold">Gambar Setelah Perbaikan:</h6>
             <div class="mb-4">
                 @foreach($maintenance->afterImages as $image)
                     <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
@@ -64,6 +67,9 @@
                 @endforeach
             </div>
         @endif
+
+        <!-- Tambahkan tombol export baru untuk Detail Maintenance -->
+        
     </div>
 </div>
 @endsection

@@ -34,32 +34,43 @@
             }
           }
         }
+
+        // Periksa apakah item menu harus ditampilkan berdasarkan peran pengguna
+        $showMenuItem = true; // Default tampilkan semua
+        if (auth()->check() && auth()->user()->role->name === 'teknisi') {
+            // Jika peran adalah teknisi, hanya tampilkan Dashboard dan Maintenance
+            if (!in_array($menu->slug, ['dashboard', 'maintenance'])) {
+                $showMenuItem = false;
+            }
+        }
       @endphp
 
-      @if (isset($menu->menuHeader))
-        <li class="menu-header small text-uppercase">
-          <span class="menu-header-text">{{ __($menu->menuHeader) }}</span>
-        </li>
-      @else
-        <li class="menu-item {{ $activeClass }}">
-          <a href="{{ isset($menu->url) ? url($menu->url) : 'javascript:void(0);' }}"
-             class="{{ $hasSubmenu ? 'menu-link menu-toggle' : 'menu-link' }}"
-             @if (isset($menu->target) && !empty($menu->target)) target="_blank" @endif>
-            @isset($menu->icon)
-              <i class="{{ $menu->icon }}"></i>
-            @endisset
-            <div>{{ isset($menu->name) ? __($menu->name) : '' }}</div>
-            @isset($menu->badge)
-              <div class="badge rounded-pill bg-{{ $menu->badge[0] }} text-uppercase ms-auto">
-                {{ $menu->badge[1] }}
-              </div>
-            @endisset
-          </a>
+      @if ($showMenuItem)
+        @if (isset($menu->menuHeader))
+          <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">{{ __($menu->menuHeader) }}</span>
+          </li>
+        @else
+          <li class="menu-item {{ $activeClass }}">
+            <a href="{{ isset($menu->url) ? url($menu->url) : 'javascript:void(0);' }}"
+               class="{{ $hasSubmenu ? 'menu-link menu-toggle' : 'menu-link' }}"
+               @if (isset($menu->target) && !empty($menu->target)) target="_blank" @endif>
+              @isset($menu->icon)
+                <i class="{{ $menu->icon }}"></i>
+              @endisset
+              <div>{{ isset($menu->name) ? __($menu->name) : '' }}</div>
+              @isset($menu->badge)
+                <div class="badge rounded-pill bg-{{ $menu->badge[0] }} text-uppercase ms-auto">
+                  {{ $menu->badge[1] }}
+                </div>
+              @endisset
+            </a>
 
-          @if ($hasSubmenu)
-            @include('layouts.sections.menu.submenu', ['menu' => $menu->submenu])
-          @endif
-        </li>
+            @if ($hasSubmenu)
+              @include('layouts.sections.menu.submenu', ['menu' => $menu->submenu])
+            @endif
+          </li>
+        @endif
       @endif
     @endforeach
   </ul>
