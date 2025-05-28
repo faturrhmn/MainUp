@@ -10,6 +10,7 @@ use App\Models\BeforeImage;
 use App\Models\AfterImage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class MaintenanceController extends Controller
 {
@@ -49,7 +50,6 @@ class MaintenanceController extends Controller
         return view('content.maintenance.proses', compact('data'));
     }
     
-
     private function calculateNextMaintenanceDate($startDate, $cycle)
     {
         $start = Carbon::parse($startDate);
@@ -71,7 +71,6 @@ class MaintenanceController extends Controller
         // Load maintenance dan sekaligus before & after images-nya
         $maintenance = Maintenance::with(['beforeImages', 'afterImages'])
             ->where('id_aset', $jadwal->id_aset)
-            ->where('status', 'proses')
             ->latest('tanggal_perbaikan')
             ->first();
     
@@ -81,7 +80,6 @@ class MaintenanceController extends Controller
     
         return view('content.maintenance.form', compact('jadwal', 'maintenance', 'beforeImages', 'afterImages'));
     }
-    
     
     public function store(Request $request)
     {
@@ -166,12 +164,12 @@ class MaintenanceController extends Controller
 
     public function prosesProses()
     {
-    // Ambil semua data maintenance yang statusnya 'proses' beserta relasi jadwal, asset, ruangan
-    $data = Maintenance::with(['jadwal.asset.ruangan'])
-        ->where('status', 'proses')
-        ->get();
+        // Ambil semua data maintenance yang statusnya 'proses' beserta relasi jadwal, asset, ruangan
+        $data = Maintenance::with(['jadwal.asset.ruangan'])
+            ->where('status', 'proses')
+            ->get();
 
-    return view('content.maintenance.proses_proses', compact('data'));
+        return view('content.maintenance.proses_proses', compact('data'));
     }
 
     public function destroyBeforeImagesBatch(Request $request)
@@ -181,9 +179,10 @@ class MaintenanceController extends Controller
             foreach ($imageIds as $id) {
                 $image = BeforeImage::find($id);
                 if ($image) {
-                    // Hapus file di storage
-                    Storage::delete('maintenance/before/' . $image->hashed_name);
-                    // Hapus data di DB
+                    $filePath = 'maintenance/before/' . $image->hashed_name;
+                    if (Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
                     $image->delete();
                 }
             }
@@ -198,7 +197,10 @@ class MaintenanceController extends Controller
             foreach ($imageIds as $id) {
                 $image = AfterImage::find($id);
                 if ($image) {
-                    Storage::delete('maintenance/after/' . $image->hashed_name);
+                    $filePath = 'maintenance/after/' . $image->hashed_name;
+                    if (Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
                     $image->delete();
                 }
             }
@@ -209,12 +211,6 @@ class MaintenanceController extends Controller
     public function detail($id_maintenance)
     {
         $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
-    
         return view('content.maintenance.detail', compact('maintenance'));
     }
-    
-    
-    
-
-
 }
