@@ -20,9 +20,30 @@
         <div class="row mb-4">
             <div class="col-md-6">
                 <h6 class="fw-bold">Informasi Barang</h6>
+                <p><strong>ID Barang:</strong> {{ $maintenance->asset->id_aset ?? '-' }}</p>
                 <p><strong>Nama Barang:</strong> {{ $maintenance->asset->nama_barang ?? '-' }}</p>
                 <p><strong>Merk:</strong> {{ $maintenance->asset->merk ?? '-' }}</p>
                 <p><strong>Tahun:</strong> {{ $maintenance->asset->tahun ?? '-' }}</p>
+                <p><strong>Jumlah:</strong> {{ $maintenance->asset->jumlah ?? '-' }}</p>
+                <p><strong>Ruangan:</strong> {{ $maintenance->asset->ruangan->nama_ruangan ?? '-' }}</p>
+                <p><strong>Tipe:</strong> {{ $maintenance->asset->tipe ?? '-' }}</p>
+                <p><strong>Keterangan:</strong> {{ $maintenance->asset->keterangan ?? '-' }}</p>
+                @php
+                    $jadwal = $maintenance->asset->jadwals->first();
+                    $siklusLabel = '-';
+                    if(isset($jadwal->siklus)) {
+                        switch($jadwal->siklus) {
+                            case 'hari': $siklusLabel = 'Harian'; break;
+                            case 'minggu': $siklusLabel = 'Mingguan'; break;
+                            case 'bulan': $siklusLabel = 'Bulanan'; break;
+                            case '3_bulan': $siklusLabel = '3 Bulan'; break;
+                            case '6_bulan': $siklusLabel = '6 Bulan'; break;
+                            case '1_tahun': $siklusLabel = '1 Tahun'; break;
+                            default: $siklusLabel = ucfirst(str_replace('_', ' ', $jadwal->siklus)); break;
+                        }
+                    }
+                @endphp
+                <p><strong>Siklus:</strong> {{ $siklusLabel }}</p>
             </div>
             <div class="col-md-6">
                 <h6 class="fw-bold">Detail Maintenance</h6>

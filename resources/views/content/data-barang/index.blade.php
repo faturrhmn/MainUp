@@ -89,8 +89,8 @@ $(document).ready(function() {
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title text-primary">Daftar Data Barang</h5>
-                            <div>
-                                <button type="button" class="btn btn-danger me-2" id="delete-selected" disabled>
+                            <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center">
+                                <button type="button" class="btn btn-danger" id="delete-selected" disabled>
                                     <i class="bx bx-trash me-1"></i> Hapus (<span id="selected-count">0</span>)
                                 </button>
                                 <a href="{{ route('data-barang.create') }}" class="btn btn-primary">

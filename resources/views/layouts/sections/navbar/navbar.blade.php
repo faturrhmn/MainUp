@@ -48,49 +48,33 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
               <i class="bx bx-bell bx-sm"></i>
-              <span class="badge bg-danger rounded-pill badge-notifications">3</span>
+              <span class="badge bg-danger rounded-pill badge-notifications">
+                  {{ isset($notifMaint) ? count($notifMaint) : 0 }}
+              </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li class="dropdown-header">Notifikasi</li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0 me-3">
-                      <i class="bx bx-info-circle bx-sm text-primary"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <span>Notifikasi 1</span>
-                      <div class="small text-muted">Baru saja</div>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0 me-3">
-                      <i class="bx bx-error-circle bx-sm text-warning"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <span>Notifikasi 2</span>
-                      <div class="small text-muted">5 menit lalu</div>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0 me-3">
-                      <i class="bx bx-check-circle bx-sm text-success"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <span>Notifikasi 3</span>
-                      <div class="small text-muted">1 jam lalu</div>
-                    </div>
-                  </div>
-                </a>
-              </li>
+              <li class="dropdown-header">Notifikasi Maintenance</li>
+              @forelse($notifMaint as $item)
+                  <li>
+                      <a class="dropdown-item" href="{{ route('maintenance.edit', $item->id_jadwal) }}">
+                          <div class="d-flex">
+                              <div class="flex-shrink-0 me-3">
+                                  <i class="bx bx-wrench bx-sm text-warning"></i>
+                              </div>
+                              <div class="flex-grow-1">
+                                  <span>
+                                      {{ $item->asset->nama_barang ?? '-' }} perlu maintenance pada 
+                                      {{ \Carbon\Carbon::parse($item->next_maintenance_date)->format('d-m-Y') }}
+                                  </span>
+                              </div>
+                          </div>
+                      </a>
+                  </li>
+              @empty
+                  <li>
+                      <span class="dropdown-item">Tidak ada notifikasi</span>
+                  </li>
+              @endforelse
               <li>
                 <hr class="dropdown-divider">
               </li>

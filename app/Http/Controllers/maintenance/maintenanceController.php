@@ -224,4 +224,22 @@ class MaintenanceController extends Controller
         $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
         return view('content.maintenance.detail', compact('maintenance'));
     }
+
+    public static function getMaintenanceNotifications()
+    {
+        $now = now();
+        $data = \App\Models\Jadwal::with(['asset', 'maintenance'])
+            ->get()
+            ->filter(function ($jadwal) use ($now) {
+                $lastFinishedMaintenance = $jadwal->maintenance()
+                    ->where('status', 'selesai')
+                    ->latest('tanggal_perbaikan')
+                    ->first();
+                $baseDate = $lastFinishedMaintenance ? $lastFinishedMaintenance->tanggal_perbaikan : $jadwal->tanggal_mulai;
+                $nextMaintenanceDate = (new self)->calculateNextMaintenanceDate($baseDate, $jadwal->siklus);
+                $sevenDaysBefore = \Carbon\Carbon::parse($nextMaintenanceDate)->subDays(7);
+                return $now->greaterThanOrEqualTo($sevenDaysBefore);
+            });
+        return $data;
+    }
 }

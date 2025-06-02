@@ -1,14 +1,21 @@
 @props(['route', 'params' => []])
 
-<div class="d-flex gap-2">
-    <a href="{{ route($route, array_merge(['type' => 'pdf'], $params)) }}" class="btn btn-danger" id="pdfBtn-{{ $route }}">
-        <i class="bx bxs-file-pdf me-1"></i>
-        Export PDF
-    </a>
-    <a href="{{ route($route, array_merge(['type' => 'excel'], $params)) }}" class="btn btn-success" id="excelBtn-{{ $route }}">
-        <i class="bx bxs-file me-1"></i>
-        Export Excel
-    </a>
+<div class="btn-group">
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bx bx-download me-1"></i> Export
+    </button>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'pdf'], $params)) }}">
+                <i class="bx bxs-file-pdf me-1 text-danger"></i> Export PDF
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'excel'], $params)) }}">
+                <i class="bx bxs-file me-1 text-success"></i> Export Excel
+            </a>
+        </li>
+    </ul>
 </div>
 
 @push('scripts')
