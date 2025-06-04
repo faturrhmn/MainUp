@@ -141,11 +141,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>No Aset</th>
                                         <th>Nama Barang</th>
                                         <th>Merk</th>
                                         <th>Tahun</th>
                                         <th>Jumlah</th>
-                                        <th>Tipe</th>
                                         <th>Ruangan</th>
                                     </tr>
                                 </thead>
@@ -153,11 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     @foreach($assets as $index => $asset)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
+                                        <td>{{ $asset->nomor_aset ?? '-' }}</td>
                                         <td>{{ $asset->nama_barang }}</td>
                                         <td>{{ $asset->merk }}</td>
                                         <td>{{ $asset->tahun }}</td>
                                         <td>{{ $asset->jumlah }}</td>
-                                        <td>{{ $asset->tipe }}</td>
                                         <td>{{ $asset->ruangan->nama_ruangan }}</td>
                                     </tr>
                                     @endforeach

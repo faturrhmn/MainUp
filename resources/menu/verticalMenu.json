@@ -43,7 +43,7 @@
       "url": "/pengaturan",
       "name": "Pengaturan",
       "icon": "menu-icon tf-icons bx bx-cog",
-      "slug": "pengaturan"
+      "slug": ["pengaturan", "admin.users"]
     }
   ]
 }

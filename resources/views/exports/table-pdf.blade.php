@@ -12,15 +12,21 @@
 
         .header {
             text-align: center;
-            border-bottom: 2px solid black;
-            padding-bottom: 10px;
             margin-bottom: 20px;
         }
 
-        .logo {
-            float: left;
-            width: 80px;
-            margin-right: 20px; /* Tambahkan margin agar tidak terlalu dekat dengan teks kop */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .logo-container img {
+            height: 35px;
+            width: auto;
         }
 
         .kop {
@@ -83,40 +89,27 @@
 <body>
 
 <div class="header">
-        <table class="header-table">
-            <tr>
-                <td class="left-col">
-                    {{-- Menggunakan data Base64 untuk Logo RRI --}}
-                    @if(isset($logoRriBase64) && $logoRriBase64)
-                        <img src="{{ $logoRriBase64 }}" alt="Logo RRI" style="width: 100px; height: auto;">
-                    @else
-                        {{-- Tampilkan placeholder jika Base64 tidak tersedia --}}
-                        Logo RRI
-                    @endif
-                </td>
-                <td class="center-col">
-                     <div class="kop" style="margin-top: 10px;">
-                        <h3>LPP RADIO REPUBLIK INDONESIA</h3>
-                        <h4>RRI BANDUNG</h4>
-                        <p>Jl. Diponegoro No. 61, Bandung 40115 | Telp. (022) 4202294</p>
-                    </div>
-                </td>
-                <td class="right-col">
-                    {{-- Menggunakan data Base64 untuk Logo MainUp --}}
-                    @if(isset($logoMainupBase64) && $logoMainupBase64)
-                        <img src="{{ $logoMainupBase64 }}" alt="Logo MainUp" style="width: 100px; height: auto;">
-                    @else
-                        {{-- Tampilkan placeholder jika Base64 tidak tersedia --}}
-                        Logo MainUp
-                    @endif
-                </td>
-            </tr>
-        </table>
+        <div class="logo-container">
+            @if(isset($logoRriBase64) && $logoRriBase64)
+                <img src="{{ $logoRriBase64 }}" alt="Logo RRI">
+            @else
+                <img src="{{ asset('assets/rri.png') }}" alt="Logo RRI">
+            @endif
+            @if(isset($logoMainupBase64) && $logoMainupBase64)
+                <img src="{{ $logoMainupBase64 }}" alt="Logo MainUp">
+            @else
+                <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo MainUp">
+            @endif
+        </div>
+        <div class="kop">
+        <h3>LPP RRI BANDUNG</h3>
+            <p>Jl. Diponegoro No.61, Bandung 40115 | Telp. (022) 4202294</p>
+        </div>
+        <div style="border-bottom: 1px solid black; margin: 15px 0;"></div>
+        <div style="text-align: center; font-size: 14px; font-weight: bold; margin: 20px 0;">{{ $judul ?? 'Laporan Tabel' }}</div>
     </div>
 
     <div class="content">
-        <h4 style="text-align: center;">{{ $judul ?? 'Laporan Tabel' }}</h4>
-
         <table>
             <thead>
                 <tr>

@@ -20,7 +20,8 @@ class Asset extends Model
         'jumlah',
         'id_ruangan',
         'tipe',
-        'keterangan'
+        'keterangan',
+        'nomor_aset'
     ];
 
     public function ruangan()

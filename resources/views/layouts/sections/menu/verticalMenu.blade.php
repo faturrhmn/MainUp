@@ -3,7 +3,7 @@
   <div class="app-brand demo">
     <a href="{{ url('/') }}" class="app-brand-link">
       <span class="app-brand-logo demo">
-        <img src="{{ asset('assets/logo.png') }}" alt="Logo" height="50">
+        <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo" height="50">
       </span>
     </a>
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
