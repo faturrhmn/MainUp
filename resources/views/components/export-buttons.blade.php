@@ -6,12 +6,12 @@
     </button>
     <ul class="dropdown-menu">
         <li>
-            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'pdf'], $params)) }}">
+            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'pdf'], $params)) }}" target="_blank">
                 <i class="bx bxs-file-pdf me-1 text-danger"></i> Export PDF
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'excel'], $params)) }}">
+            <a class="dropdown-item" href="{{ route($route, array_merge(['type' => 'excel'], $params)) }}" target="_blank">
                 <i class="bx bxs-file me-1 text-success"></i> Export Excel
             </a>
         </li>
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault(); // Mencegah navigasi default
             console.log(`Tombol PDF diklik untuk route: ${route}`);
             // Langsung mengunduh file, tidak perlu fetch AJAX lagi karena link sudah mengarah ke route download
-            window.location.href = this.href;
+            window.open(this.href, '_blank');
         });
     }
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault(); // Mencegah navigasi default
             console.log(`Tombol Excel diklik untuk route: ${route}`);
             // Langsung mengunduh file, tidak perlu fetch AJAX lagi karena link sudah mengarah ke route download
-            window.location.href = this.href;
+            window.open(this.href, '_blank');
         });
     }
 });

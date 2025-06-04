@@ -86,8 +86,8 @@ class DataBarangController extends Controller
         Jadwal::create($jadwalData);
 
         // Redirect dengan pesan sukses
-        return redirect()->route('data-barang')
-            ->with('success', 'Data barang dan jadwal berhasil ditambahkan'); // Kembalikan pesan semula
+        return redirect()->route('data-barang.index')
+            ->with('success', 'Data barang dan jadwal berhasil ditambahkan');
     }
     
 
@@ -150,8 +150,8 @@ class DataBarangController extends Controller
         }
     
         // Redirect dengan pesan sukses
-        return redirect()->route('data-barang')
-            ->with('success', 'Data barang dan jadwal berhasil diperbarui'); // Kembalikan pesan semula
+        return redirect()->route('data-barang.index')
+            ->with('success', 'Data barang dan jadwal berhasil diperbarui');
     }
     
 
@@ -164,7 +164,7 @@ class DataBarangController extends Controller
 
         Asset::whereIn('id_aset', $request->selected_items)->delete();
 
-        return redirect()->route('data-barang')
+        return redirect()->route('data-barang.index')
             ->with('success', 'Data barang berhasil dihapus');
     }
 } 

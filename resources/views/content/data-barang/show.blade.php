@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title text-primary">Detail Barang</h5>
-                            <a href="{{ route('data-barang') }}" class="btn btn-outline-primary">
+                            <a href="{{ route('data-barang.index') }}" class="btn btn-outline-primary">
                                 <i class="bx bx-arrow-back me-1"></i> Kembali
                             </a>
                         </div>

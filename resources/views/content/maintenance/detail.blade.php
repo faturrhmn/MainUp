@@ -11,6 +11,9 @@
                 <i class="bx bxs-file-pdf me-1"></i>
                 Export PDF
             </a>
+            <a href="{{ route('export.preview.maintenance.detail', $maintenance->id) }}" class="btn btn-primary" target="_blank">
+                <i class="bx bx-export me-1"></i> Export
+            </a>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title fw-bold">Detail Maintenance</h4>
