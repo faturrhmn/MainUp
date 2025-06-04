@@ -67,10 +67,14 @@
         <div class="mb-4">
             @foreach($maintenance->beforeImages as $image)
                 <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" 
+                    <img src="{{ asset('storage/maintenance/before/' . $image->hashed_name) }}" 
                          alt="Before Image"
                          class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;">
+                         style="width: 200px; height: 150px; object-fit: cover;"
+                         onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                    @if($image->keterangan)
+                        <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
+                    @endif
                 </div>
             @endforeach
         </div>
@@ -82,10 +86,14 @@
         <div class="mb-4">
             @foreach($maintenance->afterImages as $image)
                 <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" 
+                    <img src="{{ asset('storage/maintenance/after/' . $image->hashed_name) }}" 
                          alt="After Image"
                          class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;">
+                         style="width: 200px; height: 150px; object-fit: cover;"
+                         onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                    @if($image->keterangan)
+                        <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
+                    @endif
                 </div>
             @endforeach
         </div>
