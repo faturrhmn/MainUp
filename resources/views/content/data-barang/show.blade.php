@@ -34,6 +34,10 @@
                                     <label class="form-label fw-bold">Tahun</label>
                                     <p>{{ $asset->tahun }}</p>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tipe Barang</label>
+                                    <p>{{ $asset->tipe }}</p>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -58,7 +62,8 @@
 </div>
 
 <!-- History Maintenance -->
-<!-- History Maintenance -->
+{{-- Tampilkan kartu history jika ada record maintenance --}}
+@if($asset->maintenance && $asset->maintenance->isNotEmpty())
 <div class="card mt-4">
     <div class="card-body">
         <h5 class="card-title fw-bold">History Maintenance</h5>
@@ -67,34 +72,48 @@
                 <thead>
                     <tr>
                         <th>Tanggal Perbaikan</th>
-                        <th>Status Perbaikan</th>
                         <th>Keterangan</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Loop melalui SEMUA record maintenance, lalu tampilkan history masing-masing --}}
                     @forelse($asset->maintenance as $maint)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($maint->tanggal_perbaikan)->format('d/m/Y') }}</td>
-                        <td>{{ $maint->status ?? '-' }}</td>
-                        <td>{{ $maint->keterangan ?? '-' }}</td>
-                        <td>
-                            <a href="{{ route('maintenance.detail', ['id_maintenance' => $maint->id_maintenance]) }}" 
-                               class="btn btn-outline-secondary btn-sm" 
-                               title="Lihat Detail Maintenance">
-                                <i class="bx bx-show"></i>
-                            </a>
-                        </td>
-                    </tr>
+                        {{-- Pastikan record maintenance ini punya history --}}
+                        @if($maint->history && $maint->history->isNotEmpty())
+                            {{-- Menggunakan relasi history yang sudah di-load dan mengurutkan --}}
+                            @foreach($maint->history->sortByDesc('created_at') as $history)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($history->tanggal_perbaikan)->format('d/m/Y H:i') }}</td>
+                                    <td>{{ $history->keterangan ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     @empty
+                    {{-- Pesan jika tidak ada record maintenance sama sekali untuk aset ini --}}
                     <tr>
-                        <td colspan="4" class="text-center">Belum ada history maintenance.</td>
+                        <td colspan="2" class="text-center">Belum ada history maintenance untuk barang ini.</td>
                     </tr>
                     @endforelse
+
+                    {{-- Opsional: Pesan jika ada record maintenance tapi tidak satupun punya history --}}
+                    {{-- @if($asset->maintenance->isNotEmpty() && $asset->maintenance->every(fn($maint) => $maint->history->isEmpty()))
+                         <tr>
+                            <td colspan="2" class="text-center">Semua record maintenance tidak memiliki riwayat.</td>
+                        </tr>
+                    @endif --}}
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@else
+    {{-- Pesan jika tidak ada record maintenance sama sekali untuk aset ini --}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <p class="text-muted text-center">Belum ada history maintenance untuk barang ini.</p>
+        </div>
+    </div>
+@endif
 
 @endsection

@@ -54,7 +54,7 @@ $navbarDetached = ($navbarDetached ?? '');
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li class="dropdown-header">Notifikasi Maintenance</li>
-              @forelse($notifMaint as $item)
+              @forelse($notifMaint->take(4) as $item)
                   <li>
                       <a class="dropdown-item" href="{{ route('maintenance.edit', $item->id_jadwal) }}">
                           <div class="d-flex">
@@ -79,7 +79,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <a class="dropdown-item text-center" href="#">Lihat semua notifikasi</a>
+                <a class="dropdown-item text-center" href="{{ route('pages-account-settings-notifications') }}">Lihat semua notifikasi</a>
               </li>
             </ul>
           </li>

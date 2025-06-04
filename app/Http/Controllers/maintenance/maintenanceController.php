@@ -28,7 +28,16 @@ class MaintenanceController extends Controller
                     ->first();
     
                 // Jika belum pernah maintenance selesai, gunakan tanggal_mulai dari jadwal
-                $baseDate = $lastFinishedMaintenance ? $lastFinishedMaintenance->tanggal_perbaikan : $jadwal->tanggal_mulai;
+                $baseDate = \Carbon\Carbon::parse($jadwal->tanggal_mulai)->startOfDay(); // Pastikan tanggal_mulai adalah awal hari
+    
+                if ($lastFinishedMaintenance) {
+                    // Jika ada record maintenance 'selesai', cari record histori terbaru terkait maintenance ini
+                    $latestHistory = $lastFinishedMaintenance->history()->latest()->first();
+                    if ($latestHistory) {
+                        // Jika ada histori, gunakan tanggal perbaikan dari histori tersebut dan pastikan awal hari
+                        $baseDate = \Carbon\Carbon::parse($latestHistory->tanggal_perbaikan)->startOfDay(); // Pastikan tanggal perbaikan history adalah awal hari
+                    }
+                }
     
                 // Hitung next maintenance date
                 $nextMaintenanceDate = $this->calculateNextMaintenanceDate($baseDate, $jadwal->siklus);
@@ -68,15 +77,22 @@ class MaintenanceController extends Controller
     {
         $jadwal = Jadwal::with('asset.ruangan')->findOrFail($id);
     
-        // Load maintenance dan sekaligus before & after images-nya
-        $maintenance = Maintenance::with(['beforeImages', 'afterImages'])
+        // Load maintenance, images, dan history
+        $maintenance = Maintenance::with(['beforeImages', 'afterImages', 'history'])
             ->where('id_aset', $jadwal->id_aset)
-            ->latest('tanggal_perbaikan')
+            ->latest('created_at')
             ->first();
-    
-        // Tetap aman jika tidak ada maintenance
-        $beforeImages = $maintenance ? $maintenance->beforeImages : [];
-        $afterImages = $maintenance ? $maintenance->afterImages : [];
+
+        // Jika maintenance terakhir berstatus 'selesai', set $maintenance menjadi null agar form kosong
+        if ($maintenance && $maintenance->status == 'selesai') {
+            $maintenance = null;
+            $beforeImages = []; // Juga kosongkan gambar jika form dikosongkan
+            $afterImages = [];
+        } else {
+            // Tetap aman jika tidak ada maintenance sama sekali
+            $beforeImages = $maintenance ? $maintenance->beforeImages : [];
+            $afterImages = $maintenance ? $maintenance->afterImages : [];
+        }
     
         return view('content.maintenance.form', compact('jadwal', 'maintenance', 'beforeImages', 'afterImages'));
     }
@@ -102,9 +118,10 @@ class MaintenanceController extends Controller
             $maintenance = Maintenance::findOrFail($request->id_maintenance);
         } else {
             // Cari maintenance yang statusnya proses untuk aset ini
+            // Mengubah order by menjadi created_at karena tanggal_perbaikan sudah di history
             $maintenance = Maintenance::where('id_aset', $jadwal->id_aset)
                 ->where('status', 'proses')
-                ->latest('tanggal_perbaikan')
+                ->latest('created_at') // Mengubah order by menjadi created_at
                 ->first();
         }
     
@@ -116,6 +133,14 @@ class MaintenanceController extends Controller
             $maintenance->pic = $request->pic;
             $maintenance->teknisi = $request->teknisi;
             $maintenance->save();
+
+            // Buat record history baru untuk setiap update
+            \App\Models\MaintenanceHistory::create([
+                'maintenance_id' => $maintenance->id_maintenance,
+                'tanggal_perbaikan' => $request->tanggal_perbaikan,
+                'keterangan' => $request->keterangan,
+            ]);
+
         } else {
             // Create new maintenance
             $maintenance = new Maintenance();
@@ -126,6 +151,13 @@ class MaintenanceController extends Controller
             $maintenance->pic = $request->pic;
             $maintenance->teknisi = $request->teknisi;
             $maintenance->save();
+
+            // Buat record history untuk maintenance baru
+             \App\Models\MaintenanceHistory::create([
+                'maintenance_id' => $maintenance->id_maintenance,
+                'tanggal_perbaikan' => $request->tanggal_perbaikan,
+                'keterangan' => $request->keterangan,
+            ]);
         }
     
         // Upload multiple files sebelum maintenance
@@ -158,7 +190,14 @@ class MaintenanceController extends Controller
             }
         }
     
-        return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
+        // Redirect berdasarkan status perbaikan
+        if ($request->status_perbaikan == 'selesai') {
+            // Redirect kembali ke form edit yang sama untuk input maintenance berikutnya
+            return redirect()->route('maintenance.edit', $jadwal->id_jadwal)->with('success', 'Data maintenance berhasil disimpan dan status menjadi selesai!');
+        } else {
+            // Redirect ke halaman proses jika status bukan selesai
+            return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
+        }
     }
     
     public function selesai()
@@ -221,7 +260,7 @@ class MaintenanceController extends Controller
     
     public function detail($id_maintenance)
     {
-        $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
+        $maintenance = Maintenance::with(['asset', 'beforeImages', 'afterImages', 'history'])->findOrFail($id_maintenance);
         return view('content.maintenance.detail', compact('maintenance'));
     }
 

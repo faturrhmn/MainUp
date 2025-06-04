@@ -72,6 +72,14 @@ $(document).ready(function() {
                                         <input type="number" class="form-control" id="tahun" name="tahun" required>
                                     </div>
                                     <div class="mb-3">
+                                        <label class="form-label" for="tipe">Tipe Barang</label>
+                                        <select class="form-select" id="tipe" name="tipe" required>
+                                            <option value="">Pilih Tipe Barang</option>
+                                            <option value="preventive" {{ old('tipe') == 'preventive' ? 'selected' : '' }}>Preventive</option>
+                                            <option value="corrective" {{ old('tipe') == 'corrective' ? 'selected' : '' }}>Corrective</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label" for="siklus">Siklus Maintenance</label>
                                         <select class="form-select" id="siklus" name="siklus" required>
                                             <option value="">Pilih Siklus Maintenance</option>

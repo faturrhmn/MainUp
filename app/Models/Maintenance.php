@@ -44,4 +44,9 @@ class Maintenance extends Model
         return $this->hasMany(AfterImage::class, 'id_maintenance', 'id_maintenance');
     }
     
+    // Relasi ke tabel maintenance_histories
+    public function history()
+    {
+        return $this->hasMany(\App\Models\MaintenanceHistory::class, 'maintenance_id', 'id_maintenance');
+    }
 }

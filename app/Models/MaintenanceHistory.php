@@ -11,8 +11,11 @@ class MaintenanceHistory extends Model
 
     protected $fillable = [
         'maintenance_id',
-        'tanggal_perbaikan_sebelumnya',
+        'tanggal_perbaikan',
         'keterangan',
+        'status',
+        'pic',
+        'teknisi',
     ];
 
     // Relasi ke Maintenance

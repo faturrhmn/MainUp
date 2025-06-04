@@ -121,6 +121,7 @@ $(document).ready(function() {
                                             <th>Nama Barang</th>
                                             <th>Merk</th>
                                             <th>Tahun</th>
+                                            <th>Tipe Barang</th>
                                             <th>Jumlah</th>
                                             <th>Ruangan</th>
                                             <th>Keterangan</th>
@@ -139,6 +140,7 @@ $(document).ready(function() {
                                             <td>{{ $asset->nama_barang }}</td>
                                             <td>{{ $asset->merk }}</td>
                                             <td>{{ $asset->tahun }}</td>
+                                            <td>{{ $asset->tipe }}</td>
                                             <td>{{ $asset->jumlah }}</td>
                                             <td>{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
                                             <td>{{ $asset->keterangan }}</td>

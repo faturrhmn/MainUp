@@ -170,6 +170,38 @@
         @else
             <p class="text-muted">Tidak ada gambar setelah perbaikan</p>
         @endif
+
+        <hr>
+
+        <!-- Tabel History Perbaikan (Hanya tampil jika status maintenance = 'proses') -->
+        @if(isset($maintenance) && $maintenance->status == 'proses' && $maintenance->history && $maintenance->history->isNotEmpty())
+            <div class="mt-4">
+                <h5>Riwayat Perbaikan:</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Perbaikan</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($maintenance->history()->orderBy('created_at', 'desc')->get() as $history)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($history->tanggal_perbaikan)->format('d-m-Y') }}</td>
+                                    <td>{{ $history->keterangan ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            {{-- Hanya tampilkan pesan jika ada record maintenance tapi belum ada history --}}
+            @if(isset($maintenance))
+                <p class="text-muted">Belum ada riwayat perbaikan</p>
+            @endif
+        @endif
     </div>
 </div>
 

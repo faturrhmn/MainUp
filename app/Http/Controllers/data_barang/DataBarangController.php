@@ -23,7 +23,12 @@ class DataBarangController extends Controller
     // Di Controller
     public function show($id)
     {
-        $asset = Asset::with(['ruangan', 'maintenance'])->findOrFail($id);
+        // Load asset dengan relasi ruangan dan semua record maintenance beserta historinya
+        $asset = Asset::with(['ruangan', 'maintenance' => function($query) {
+            $query->with('history')->orderBy('created_at', 'desc'); // Muat relasi history dan urutkan maintenance berdasarkan created_at
+        }])->findOrFail($id);
+        
+        // Kirim $asset (yang sudah memuat semua maintenance dan historinya) ke view
         return view('content.data-barang.show', compact('asset'));
     }
     
@@ -51,10 +56,13 @@ class DataBarangController extends Controller
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
             'keterangan' => 'nullable|string',
-            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Validasi siklus
-            'tanggal_mulai' => 'required|date', // Validasi tanggal mulai
+            'tipe' => 'required|string|in:preventive,corrective', // Tambahkan validasi tipe
+            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Kembalikan ke required
+            'tanggal_mulai' => 'required|date', // Kembalikan ke required
         ], [
-            'jumlah.min' => 'Jumlah barang minimal 1'
+            'jumlah.min' => 'Jumlah barang minimal 1',
+            'tipe.required' => 'Tipe barang harus dipilih',
+            'tipe.in' => 'Tipe barang tidak valid',
         ]);
     
         // Ambil semua data dari request
@@ -67,7 +75,7 @@ class DataBarangController extends Controller
         // Simpan data barang ke tabel asset
         $asset = Asset::create($data);
     
-        // Simpan data jadwal ke tabel jadwal
+        // Simpan data jadwal ke tabel jadwal (kembali ke logika semula)
         $jadwalData = [
             'siklus' => $request->siklus,
             'tanggal_mulai' => $request->tanggal_mulai,
@@ -76,10 +84,10 @@ class DataBarangController extends Controller
     
         // Menyimpan data jadwal
         Jadwal::create($jadwalData);
-    
+
         // Redirect dengan pesan sukses
         return redirect()->route('data-barang')
-            ->with('success', 'Data barang dan jadwal berhasil ditambahkan');
+            ->with('success', 'Data barang dan jadwal berhasil ditambahkan'); // Kembalikan pesan semula
     }
     
 
@@ -104,10 +112,13 @@ class DataBarangController extends Controller
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
             'keterangan' => 'nullable|string',
-            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Validasi siklus
-            'tanggal_mulai' => 'required|date', // Validasi tanggal mulai
+            'tipe' => 'required|string|in:preventive,corrective', // Tambahkan validasi tipe
+            'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Kembalikan ke required
+            'tanggal_mulai' => 'required|date', // Kembalikan ke required
         ], [
-            'jumlah.min' => 'Jumlah barang minimal 1'
+            'jumlah.min' => 'Jumlah barang minimal 1',
+            'tipe.required' => 'Tipe barang harus dipilih',
+            'tipe.in' => 'Tipe barang tidak valid',
         ]);
     
         // Cari asset berdasarkan ID
@@ -121,7 +132,7 @@ class DataBarangController extends Controller
         // Update data barang
         $asset->update($data);
 
-        // Update atau buat data jadwal
+        // Update atau buat data jadwal (kembali ke logika semula)
         if ($asset->jadwals->count() > 0) {
             // Update jadwal pertama
             $jadwal = $asset->jadwals->first();
@@ -140,7 +151,7 @@ class DataBarangController extends Controller
     
         // Redirect dengan pesan sukses
         return redirect()->route('data-barang')
-            ->with('success', 'Data barang dan jadwal berhasil diperbarui');
+            ->with('success', 'Data barang dan jadwal berhasil diperbarui'); // Kembalikan pesan semula
     }
     
 

@@ -13,9 +13,9 @@
         .header {
             text-align: center;
             border-bottom: 2px solid black;
-            padding-top: 5px;
-            padding-bottom: 3px;
-            margin-bottom: 0px;
+            padding-top: 10px; /* Increased padding */
+            padding-bottom: 10px; /* Increased padding */
+            margin-bottom: 15px; /* Increased margin */
         }
 
         .kop {
@@ -25,9 +25,9 @@
         }
 
         .kop h3, .kop h4, .kop p {
-            margin: 0;
+            margin: 2px 0; /* Adjusted margin */
             padding: 0;
-            line-height: 1.2;
+            line-height: 1.4; /* Adjusted line height */
         }
 
         .header-table {
@@ -36,7 +36,7 @@
 
         .header-table td {
             vertical-align: top;
-            padding: 0;
+            padding: 0; /* Removed horizontal padding */
         }
 
         .header-table .left-col {
@@ -73,50 +73,77 @@
         }
 
         .section-title {
-            font-size: 14px;
+            font-size: 16px; /* Slightly increased font size */
             font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 22px;
+            margin-top: 20px; /* Increased margin */
+            margin-bottom: 10px; /* Adjusted margin */
             padding-bottom: 5px;
+            border-bottom: 1px solid #eee; /* Added subtle border */
             display: block;
             clear: both;
             width: 100%;
         }
 
         .data-row {
-            margin-bottom: 5px;
+            margin-bottom: 8px; /* Increased margin */
+            line-height: 1.5; /* Improved line height */
         }
 
         .data-row strong {
             display: inline-block;
-            width: 150px; /* Adjust as needed for alignment */
+            width: 180px; /* Increased width for labels */
+            margin-right: 10px; /* Added margin */
         }
 
         .image-container {
-            margin-top: 15px;
+            margin-top: 20px; /* Increased margin */
+             text-align: center; /* Center images */
         }
 
         .image-item {
             display: inline-block;
-            margin-right: 15px;
-            margin-bottom: 15px;
-            padding: 5px;
+            margin: 0 15px 15px 0; /* Adjusted margin for grid-like layout */
+            padding: 8px; /* Increased padding */
             text-align: center;
+             vertical-align: top; /* Align items to the top */
         }
 
         .image-item img {
-            max-width: 150px;
-            height: auto;
+            max-width: 180px; /* Adjusted max width */
+            height: 130px; /* Adjusted fixed height for consistency */
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* Adjusted margin */
+             object-fit: cover;
         }
 
         .image-caption {
             font-size: 10px;
             text-align: center;
-            margin-top: 8px;
+            margin-top: 4px; /* Adjusted margin */
             word-break: break-word;
+             max-width: 180px; /* Constrain caption width */
         }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .history-table th,
+        .history-table td {
+            border: 1px solid #000;
+            padding: 10px; /* Increased padding */
+            text-align: left;
+             vertical-align: top; /* Align content to top */
+             font-size: 11px; /* Slightly smaller font for table content */
+        }
+
+         .history-table th {
+            background-color: #f2f2f2; /* Added light background to header */
+            font-weight: bold;
+        }
+
 
         .footer {
             position: fixed;
@@ -124,6 +151,7 @@
             width: 100%;
             font-size: 10px;
             font-style: italic;
+             text-align: center; /* Center footer text */
         }
     </style>
 </head>
@@ -160,36 +188,70 @@
     </div>
 
     <div class="content">
-        <h4 style="text-align: center; margin-bottom: 10px;">{{ $judul ?? 'Laporan Detail Maintenance' }}</h4>
-        <table style="width: 100%; margin-bottom: 10px;">
+        <h4 style="text-align: center; margin-bottom: 20px;">{{ $judul ?? 'Laporan Detail Maintenance' }}</h4>
+        <table style="width: 100%; margin-bottom: 20px;">
             <tr>
                 <td style="width: 48%; vertical-align: top;">
                     <div class="section-title">Informasi Barang</div>
-                    <div class="data-row"><strong>ID Barang:</strong> {{ $asset->id_aset ?? '-' }}</div>
-                    <div class="data-row"><strong>Nama Barang:</strong> {{ $asset->nama_barang ?? '-' }}</div>
-                    <div class="data-row"><strong>Merk:</strong> {{ $asset->merk ?? '-' }}</div>
-                    <div class="data-row"><strong>Tahun:</strong> {{ $asset->tahun ?? '-' }}</div>
-                    <div class="data-row"><strong>Jumlah:</strong> {{ $asset->jumlah ?? '-' }}</div>
-                    <div class="data-row"><strong>Ruangan:</strong> {{ $asset->ruangan->nama_ruangan ?? '-' }}</div>
-                    <div class="data-row"><strong>Tipe:</strong> {{ $asset->tipe ?? '-' }}</div>
-                    <div class="data-row"><strong>Keterangan:</strong> {{ $asset->keterangan ?? '-' }}</div>
-                    @php
-                        $jadwal = $asset->jadwals->first();
-                        $siklusLabel = '-';
-                        if(isset($jadwal->siklus)) {
-                            switch($jadwal->siklus) {
-                                case 'hari': $siklusLabel = 'Harian'; break;
-                                case 'minggu': $siklusLabel = 'Mingguan'; break;
-                                case 'bulan': $siklusLabel = 'Bulanan'; break;
-                                case '3_bulan': $siklusLabel = '3 Bulan'; break;
-                                case '6_bulan': $siklusLabel = '6 Bulan'; break;
-                                case '1_tahun': $siklusLabel = '1 Tahun'; break;
-                                default: $siklusLabel = ucfirst(str_replace('_', ' ', $jadwal->siklus)); break;
+                    {{-- Gunakan tabel untuk tata letak yang rapi --}}
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">ID Barang:</td>
+                            <td style="padding: 4px 0;">{{ $asset->id_aset ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Nama Barang:</td>
+                            <td style="padding: 4px 0;">{{ $asset->nama_barang ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Merk:</td>
+                            <td style="padding: 4px 0;">{{ $asset->merk ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tahun:</td>
+                            <td style="padding: 4px 0;">{{ $asset->tahun ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Jumlah:</td>
+                            <td style="padding: 4px 0;">{{ $asset->jumlah ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Ruangan:</td>
+                            <td style="padding: 4px 0;">{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
+                        </tr>
+                         <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tipe:</td>
+                            <td style="padding: 4px 0;">{{ $asset->tipe ?? '-' }}</td>
+                        </tr>
+                         @php
+                            $jadwal = $asset->jadwals->first();
+                            $siklusLabel = '-';
+                            if(isset($jadwal->siklus)) {
+                                switch($jadwal->siklus) {
+                                    case 'hari': $siklusLabel = 'Harian'; break;
+                                    case 'minggu': $siklusLabel = 'Mingguan'; break;
+                                    case 'bulan': $siklusLabel = 'Bulanan'; break;
+                                    case '3_bulan': $siklusLabel = '3 Bulan'; break;
+                                    case '6_bulan': $siklusLabel = '6 Bulan'; break;
+                                    case '1_tahun': $siklusLabel = '1 Tahun'; break;
+                                    default: $siklusLabel = ucfirst(str_replace('_', ' ', $jadwal->siklus)); break;
+                                }
                             }
-                        }
-                    @endphp
-                    <div class="data-row"><strong>Siklus:</strong> {{ $siklusLabel }}</div>
-                    <div class="data-row"><strong>Tanggal Mulai:</strong> {{ isset($jadwal->tanggal_mulai) ? \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d-m-Y') : '-' }}</div>
+                        @endphp
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Siklus:</td>
+                            <td style="padding: 4px 0;">{{ $siklusLabel }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tanggal Mulai:</td>
+                            <td style="padding: 4px 0;">{{ isset($jadwal->tanggal_mulai) ? \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d-m-Y') : '-' }}</td>
+                        </tr>
+                         <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Keterangan:</td>
+                            <td style="padding: 4px 0;">{{ $asset->keterangan ?? '-' }}</td>
+                        </tr>
+                    </table>
+
                 </td>
                 <td style="width: 4%;"></td>
                 <td style="width: 48%; vertical-align: top;">
@@ -222,29 +284,29 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="3" style="vertical-align: top;">
-                    <div class="data-row">
-                        <strong>Keterangan:</strong><br>
-                        <span style="text-align: justify; display: block;">{{ $maintenance->keterangan ?? '-' }}</span>
-                    </div>
-                </td>
-            </tr>
+           
         </table>
+        {{-- Calculate total number of images --}}
+        @php
+            $totalImages = count($beforeImages) + count($afterImages);
+        @endphp
+
+        {{-- Page break before beforeImages section if needed (optional, based on previous content) --}}
         <div style="page-break-before: always;"></div>
+
         <div class="section-title" style="margin-top: 20px;">Gambar Sebelum Perbaikan</div>
         <div style="width:100%;height:1px;clear:both;"></div>
         <div class="image-container">
             @forelse($beforeImages as $image)
                 @if(isset($image['base64']) && $image['base64'])
-                    <div class="image-item" style="max-width: 200px;">
-                        <img src="{{ $image['base64'] }}" alt="Before Image" style="max-width: 200px; height: 150px; object-fit: cover;">
+                    <div class="image-item">
+                        <img src="{{ $image['base64'] }}" alt="Before Image">
                         @if(isset($image['keterangan']) && $image['keterangan'])
                             <div class="image-caption">{{ $image['keterangan'] }}</div>
                         @endif
                     </div>
                 @else
-                    <div class="image-item" style="max-width: 200px;">
+                    <div class="image-item">
                         <p>Gambar tidak tersedia</p>
                         @if(isset($image['keterangan']) && $image['keterangan'])
                             <div class="image-caption">{{ $image['keterangan'] }}</div>
@@ -255,20 +317,25 @@
                 <p>Tidak ada gambar sebelum perbaikan.</p>
             @endforelse
         </div>
-        <div style="page-break-before: always;"></div>
+
+        {{-- Add page break before afterImages only if total images are 8 or more --}}
+        @if($totalImages >= 8)
+            <div style="page-break-before: always;"></div>
+        @endif
+
         <div class="section-title" style="margin-top: 20px;">Gambar Setelah Perbaikan</div>
         <div style="width:100%;height:1px;clear:both;"></div>
         <div class="image-container">
             @forelse($afterImages as $image)
                 @if(isset($image['base64']) && $image['base64'])
-                    <div class="image-item" style="max-width: 200px;">
-                        <img src="{{ $image['base64'] }}" alt="After Image" style="max-width: 200px; height: 150px; object-fit: cover;">
+                    <div class="image-item">
+                        <img src="{{ $image['base64'] }}" alt="After Image">
                         @if(isset($image['keterangan']) && $image['keterangan'])
                             <div class="image-caption">{{ $image['keterangan'] }}</div>
                         @endif
                     </div>
                 @else
-                    <div class="image-item" style="max-width: 200px;">
+                    <div class="image-item">
                         <p>Gambar tidak tersedia</p>
                         @if(isset($image['keterangan']) && $image['keterangan'])
                             <div class="image-caption">{{ $image['keterangan'] }}</div>
@@ -279,6 +346,32 @@
                 <p>Tidak ada gambar setelah perbaikan.</p>
             @endforelse
         </div>
+
+        {{-- Halaman baru untuk History Perbaikan --}}
+        <div style="page-break-before: always;"></div>
+        <div class="section-title" style="margin-top: 20px;">History Perbaikan</div>
+        <div style="width:100%;height:1px;clear:both;"></div>
+
+        @if($maintenance->history && $maintenance->history->isNotEmpty())
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Tanggal Perbaikan</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($maintenance->history->sortBy('created_at') as $historyItem)
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($historyItem->tanggal_perbaikan)->format('d/m/Y') }}</td>
+                            <td>{{ $historyItem->keterangan ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p>Tidak ada history perbaikan untuk maintenance ini.</p>
+        @endif
     </div>
 
     <div class="footer">

@@ -290,7 +290,7 @@ class ExportController extends Controller
      */
     public function exportDetailMaintenance(int $id_maintenance, Request $request)
     {
-        $maintenance = Maintenance::with(['asset.ruangan', 'beforeImages', 'afterImages'])->findOrFail($id_maintenance);
+        $maintenance = Maintenance::with(['asset.ruangan', 'beforeImages', 'afterImages', 'history'])->findOrFail($id_maintenance);
 
         // Encode gambar maintenance ke Base64
         $beforeImagesEncoded = $maintenance->beforeImages->map(function($image) {

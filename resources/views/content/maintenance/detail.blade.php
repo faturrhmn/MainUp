@@ -93,6 +93,39 @@
             </div>
         @endif
 
+        <hr>
+
+        <!-- Tabel History Perbaikan -->
+        @if($maintenance->history && $maintenance->history->isNotEmpty())
+            <div class="mt-4">
+                <h5 class="card-title fw-bold">Riwayat Perbaikan</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Perbaikan</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- Loop melalui history dari maintenance saat ini --}}
+                            @foreach($maintenance->history->sortByDesc('created_at') as $history)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($history->tanggal_perbaikan)->format('d/m/Y') }}</td>
+                                    <td>{{ $history->keterangan ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            {{-- Pesan jika tidak ada history untuk maintenance ini --}}
+            {{-- <div class="mt-4">
+                <p class="text-muted">Tidak ada riwayat perbaikan untuk maintenance ini.</p>
+            </div> --}}
+        @endif
+
         <!-- Tambahkan tombol export baru untuk Detail Maintenance -->
         
     </div>
