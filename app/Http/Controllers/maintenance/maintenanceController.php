@@ -192,8 +192,7 @@ class MaintenanceController extends Controller
     
         // Redirect berdasarkan status perbaikan
         if ($request->status_perbaikan == 'selesai') {
-            // Redirect kembali ke form edit yang sama untuk input maintenance berikutnya
-            return redirect()->route('maintenance.edit', $jadwal->id_jadwal)->with('success', 'Data maintenance berhasil disimpan dan status menjadi selesai!');
+            return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan');
         } else {
             // Redirect ke halaman proses jika status bukan selesai
             return redirect()->route('maintenance.proses')->with('success', 'Data maintenance berhasil disimpan!');
