@@ -123,4 +123,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ruangan', [ExportController::class, 'exportRuangan'])->name('ruangan');
         Route::get('/assets', [ExportController::class, 'exportAssets'])->name('assets');
     });
+
+    // Add the account settings notifications route
+    Route::get('/account-settings-notifications', [App\Http\Controllers\pages\AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 });

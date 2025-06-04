@@ -78,6 +78,9 @@ $navbarDetached = ($navbarDetached ?? '');
               <li>
                 <hr class="dropdown-divider">
               </li>
+              <li>
+                <a href="{{ route('pages-account-settings-notifications') }}" class="dropdown-item d-flex justify-content-center p-3">Lihat semua notifikasi</a>
+              </li>
             </ul>
           </li>
 
