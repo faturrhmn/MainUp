@@ -19,6 +19,7 @@
         <div class="col-md-6">
             <h6 class="fw-bold">Informasi Barang</h6>
             <p><strong>ID Barang:</strong> {{ $maintenance->asset->id_aset ?? '-' }}</p>
+            <p><strong>No Aset:</strong> {{ $maintenance->asset->nomor_aset ?? '-' }}</p>
             <p><strong>Nama Barang:</strong> {{ $maintenance->asset->nama_barang ?? '-' }}</p>
             <p><strong>Merk:</strong> {{ $maintenance->asset->merk ?? '-' }}</p>
             <p><strong>Tahun:</strong> {{ $maintenance->asset->tahun ?? '-' }}</p>

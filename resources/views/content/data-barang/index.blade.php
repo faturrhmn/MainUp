@@ -119,6 +119,7 @@ $(document).ready(function() {
                                             </th>
                                             <th>No</th>
                                             <th>Nama Barang</th>
+                                            <th>Nomor Aset</th>
                                             <th>Merk</th>
                                             <th>Tahun</th>
                                             <th>Tipe Barang</th>
@@ -138,15 +139,29 @@ $(document).ready(function() {
                                             </td>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $asset->nama_barang }}</td>
+                                            <td>{{ $asset->nomor_aset ?? '-' }}</td>
                                             <td>{{ $asset->merk }}</td>
                                             <td>{{ $asset->tahun }}</td>
                                             <td>{{ $asset->tipe }}</td>
                                             <td>{{ $asset->jumlah }}</td>
                                             <td>{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
-                                            <td>{{ $asset->keterangan }}</td>
+                                            <td>{{ $asset->keterangan ?? '-'  }}</td>
                                             <td>
                                                 @if($asset->jadwals->isNotEmpty())
-                                                    {{ $asset->jadwals->first()->siklus }}
+                                                    @php
+                                                        $siklus = $asset->jadwals->first()->siklus;
+                                                        $siklusLabel = '-';
+                                                        switch($siklus) {
+                                                            case 'hari': $siklusLabel = 'Harian'; break;
+                                                            case 'minggu': $siklusLabel = 'Mingguan'; break;
+                                                            case 'bulan': $siklusLabel = 'Bulanan'; break;
+                                                            case '3_bulan': $siklusLabel = '3 Bulan'; break;
+                                                            case '6_bulan': $siklusLabel = '6 Bulan'; break;
+                                                            case '1_tahun': $siklusLabel = '1 Tahun'; break;
+                                                            default: $siklusLabel = ucfirst(str_replace('_', ' ', $siklus)); break;
+                                                        }
+                                                    @endphp
+                                                    {{ $siklusLabel }}
                                                 @else
                                                     Tidak Ada
                                                 @endif

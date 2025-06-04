@@ -64,6 +64,10 @@ $(document).ready(function() {
                                         <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
                                     </div>
                                     <div class="mb-3">
+                                        <label class="form-label" for="nomor_aset">Nomor Aset</label>
+                                        <input type="number" class="form-control" id="nomor_aset" name="nomor_aset" min="0">
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label" for="merk">Merk</label>
                                         <input type="text" class="form-control" id="merk" name="merk" required>
                                     </div>
