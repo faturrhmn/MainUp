@@ -228,8 +228,8 @@
                     <div class="section-title">Informasi Barang</div>
                     <table style="width: 100%;">
                         <tr>
-                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">ID Barang:</td>
-                            <td style="padding: 4px 0;">{{ $asset->id_aset ?? '-' }}</td>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">No Asset:</td>
+                            <td style="padding: 4px 0;">{{ $asset->nomor_aset ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">Nama Barang:</td>
