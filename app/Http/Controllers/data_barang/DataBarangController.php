@@ -162,9 +162,12 @@ class DataBarangController extends Controller
             'selected_items.*' => 'exists:assets,id_aset'
         ]);
 
+        // Hapus jadwal terkait sebelum menghapus aset
+        Jadwal::whereIn('id_aset', $request->selected_items)->delete();
+
         Asset::whereIn('id_aset', $request->selected_items)->delete();
 
         return redirect()->route('data-barang.index')
-            ->with('success', 'Data barang berhasil dihapus');
+            ->with('error', 'Data barang berhasil dihapus');
     }
 } 

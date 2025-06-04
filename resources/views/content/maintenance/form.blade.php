@@ -217,4 +217,37 @@
     });
 </script>
 
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Ini akan mencegah perilaku submit default jika ada handler lain,
+        // tapi kemudian kita submit ulang secara manual untuk memastikan native submit
+        event.preventDefault();
+        this.submit();
+    });
+</script>
+
+<script>
+    // Script to force redirect after success message appears
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            // Check if an alert with class 'alert-success' is added
+            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1 && node.classList.contains('alert-success')) {
+                        // Success alert found, wait a moment then redirect
+                        setTimeout(function() {
+                            window.location.href = '{{ route('maintenance.proses') }}';
+                        }, 2000); // Redirect after 2 seconds (adjust as needed)
+                        observer.disconnect(); // Stop observing once found
+                    }
+                });
+            }
+        });
+    });
+
+    // Start observing the body for added nodes
+    observer.observe(document.body, { childList: true, subtree: true });
+
+</script>
+
 @endsection

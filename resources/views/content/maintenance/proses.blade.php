@@ -17,6 +17,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     new DataTable('#maintenanceTable', {
+        dom: 'lfrtip',
         processing: true,
         pageLength: 10,
         language: {
@@ -47,9 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title fw-bold">Maintenance Barang Processed</h4>
-            <a href="{{ url()->previous() }}" class="btn btn-outline-primary">
-                <i class="bx bx-arrow-back"></i> Kembali
-            </a>
         </div>
         <div class="table-responsive">
             <table id="maintenanceTable" class="table table-striped" style="width:100%">
@@ -91,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             @if($maintenanceProses)
                                 <span class="badge bg-warning">Proses</span>
                             @else
-                                <span class="badge bg-secondary">Belum Diproses</span>
+                                <span class="badge bg-danger">Belum Diproses</span>
                             @endif
                         </td>
 

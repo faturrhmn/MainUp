@@ -17,9 +17,13 @@
 @section('page-script')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Disable DataTables warnings for this table
+    $.fn.dataTable.ext.errMode = 'none';
+
     new DataTable('#maintenanceTable', {
         processing: true,
         pageLength: 10,
+        pagingType: "full_numbers",
         language: {
             search: "Cari:",
             lengthMenu: "Tampilkan _MENU_ data per halaman",

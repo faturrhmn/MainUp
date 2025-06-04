@@ -63,15 +63,26 @@ $(document).ready(function() {
         $('#selected-count').text(checkedCount);
     }
 
-    // Handle delete confirmation
+    // Handle delete button click
     $(document).on('click', '#delete-selected', function(e) {
         e.preventDefault();
         var checkedItems = $('.item-checkbox:checked');
         if (checkedItems.length > 0) {
-            if (confirm('Apakah Anda yakin ingin menghapus ' + checkedItems.length + ' item yang dipilih?')) {
-                $('#delete-form').submit();
-            }
+            // Update modal text with item count
+            $('#item-count').text('(' + checkedItems.length + ' item)');
+            // Show the confirmation modal
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+            deleteModal.show();
         }
+    });
+
+    // Handle confirmation button click in the modal
+    $(document).on('click', '#confirm-delete-btn', function() {
+        // Hide the modal
+        var deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
+        deleteModal.hide();
+        // Submit the delete form
+        $('#delete-form').submit();
     });
 
     // Initialize delete button state
@@ -99,13 +110,6 @@ $(document).ready(function() {
                                 <x-export-buttons route="export.assets" />
                             </div>
                         </div>
-
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible mb-3" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
 
                         <form id="delete-form" action="{{ route('data-barang.destroy-multiple') }}" method="POST">
                             @csrf
@@ -182,6 +186,25 @@ $(document).ready(function() {
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Konfirmasi Penghapusan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                Apakah Anda yakin ingin menghapus item yang dipilih? <span id="item-count"></span>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Hapus</button>
             </div>
         </div>
     </div>
