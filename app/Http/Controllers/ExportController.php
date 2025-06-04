@@ -346,4 +346,29 @@ class ExportController extends Controller
         // Remove Excel export logic for detail maintenance
         return redirect()->back()->with('error', 'Ekspor Excel tidak tersedia untuk detail maintenance ini.');
     }
+
+    public function exportAssetDetail($id, Request $request)
+    {
+        $asset = Asset::with(['ruangan', 'maintenance' => function($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->findOrFail($id);
+
+        // Get logo data
+        $logoData = $this->getBase64Logos();
+        
+        $data = [
+            'asset' => $asset,
+            'logoRriBase64' => $logoData['logoRriBase64'],
+            'logoMainupBase64' => $logoData['logoMainupBase64'],
+            'judul' => 'DETAIL DATA BARANG'
+        ];
+
+        if ($request->type === 'pdf') {
+            return PDF::loadView('exports.asset-detail-pdf', $data)
+                       ->setPaper('a4', 'portrait')
+                       ->stream('detail_barang_' . $id . '.pdf');
+        }
+        
+        return redirect()->back()->with('error', 'Tipe export tidak valid.');
+    }
 } 

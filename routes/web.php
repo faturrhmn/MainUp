@@ -122,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/after-images', [ExportController::class, 'exportAfterImages'])->name('after-images');
         Route::get('/ruangan', [ExportController::class, 'exportRuangan'])->name('ruangan');
         Route::get('/assets', [ExportController::class, 'exportAssets'])->name('assets');
+        Route::get('/assets/detail/{id}', [ExportController::class, 'exportAssetDetail'])->name('assets.detail');
     });
 
     // Add the account settings notifications route
