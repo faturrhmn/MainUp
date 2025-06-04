@@ -12,22 +12,49 @@
 
         .header {
             text-align: center;
-            border-bottom: 2px solid black;
-            padding-top: 10px; /* Increased padding */
-            padding-bottom: 10px; /* Increased padding */
-            margin-bottom: 15px; /* Increased margin */
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .logo-container img {
+            height: 35px;
+            width: auto;
         }
 
         .kop {
             text-align: center;
-            margin-top: 0;
-            margin-bottom: 0;
+            margin-bottom: 15px;
         }
 
-        .kop h3, .kop h4, .kop p {
-            margin: 2px 0; /* Adjusted margin */
-            padding: 0;
-            line-height: 1.4; /* Adjusted line height */
+        .kop h3 {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+
+        .kop p {
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .divider {
+            border-bottom: 1px solid black;
+            margin: 15px 0;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 20px 0;
         }
 
         .header-table {
@@ -96,54 +123,70 @@
         }
 
         .image-container {
-            margin-top: 20px; /* Increased margin */
-             text-align: center; /* Center images */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+            margin: 20px 0;
         }
 
         .image-item {
+            width: calc(50% - 10px);
             display: inline-block;
-            margin: 0 15px 15px 0; /* Adjusted margin for grid-like layout */
-            padding: 8px; /* Increased padding */
-            text-align: center;
-             vertical-align: top; /* Align items to the top */
+            vertical-align: top;
         }
 
         .image-item img {
-            max-width: 180px; /* Adjusted max width */
-            height: 130px; /* Adjusted fixed height for consistency */
-            display: block;
-            margin-bottom: 8px; /* Adjusted margin */
-             object-fit: cover;
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            margin-bottom: 8px;
         }
 
         .image-caption {
-            font-size: 10px;
+            font-size: 11px;
             text-align: center;
-            margin-top: 4px; /* Adjusted margin */
-            word-break: break-word;
-             max-width: 180px; /* Constrain caption width */
+            margin-top: 5px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
         }
 
         .history-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            font-size: 11px;
+            margin-bottom: 20px;
         }
 
         .history-table th,
         .history-table td {
             border: 1px solid #000;
-            padding: 10px; /* Increased padding */
-            text-align: left;
-             vertical-align: top; /* Align content to top */
-             font-size: 11px; /* Slightly smaller font for table content */
+            padding: 8px;
+            vertical-align: top;
         }
 
-         .history-table th {
-            background-color: #f2f2f2; /* Added light background to header */
+        .history-table th {
+            background-color: #f5f5f5;
             font-weight: bold;
+            text-transform: uppercase;
+            font-size: 10px;
         }
 
+        .history-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .history-table tr:hover {
+            background-color: #f0f0f0;
+        }
 
         .footer {
             position: fixed;
@@ -158,42 +201,31 @@
 <body>
 
     <div class="header">
-        <table class="header-table">
-            <tr>
-                <td class="left-col">
-                    {{-- Menggunakan data Base64 untuk Logo RRI --}}
-                    @if(isset($logoRriBase64) && $logoRriBase64)
-                        <img src="{{ $logoRriBase64 }}" alt="Logo RRI" style="width: 120px; height: auto;">
-                    @else
-                        <img src="{{ asset('assets/rri.png') }}" alt="Logo RRI" style="width: 120px; height: auto;">
-                    @endif
-                </td>
-                <td class="center-col">
-                     <div class="kop">
-                        <h3>LPP RADIO REPUBLIK INDONESIA</h3>
-                        <h4>RRI BANDUNG</h4>
-                        <p>Jl. Diponegoro No. 61, Bandung 40115 | Telp. (022) 4202294</p>
-                    </div>
-                </td>
-                <td class="right-col">
-                    {{-- Menggunakan data Base64 untuk Logo MainUp --}}
-                    @if(isset($logoMainupBase64) && $logoMainupBase64)
-                        <img src="{{ $logoMainupBase64 }}" alt="Logo MainUp" style="width: 120px; height: auto;">
-                    @else
-                        <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo MainUp" style="width: 120px; height: auto;">
-                    @endif
-                </td>
-            </tr>
-        </table>
+        <div class="logo-container">
+            @if(isset($logoRriBase64) && $logoRriBase64)
+                <img src="{{ $logoRriBase64 }}" alt="Logo RRI">
+            @else
+                <img src="{{ asset('assets/rri.png') }}" alt="Logo RRI">
+            @endif
+            @if(isset($logoMainupBase64) && $logoMainupBase64)
+                <img src="{{ $logoMainupBase64 }}" alt="Logo MainUp">
+            @else
+                <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo MainUp">
+            @endif
+        </div>
+        <div class="kop">
+            <h3>LPP RRI BANDUNG</h3>
+            <p>Jl. Diponegoro No.61, Bandung 40115 | Telp. (022) 4202294</p>
+        </div>
+        <div class="divider"></div>
+        <div class="title">LAPORAN DETAIL MAINTENANCE</div>
     </div>
 
     <div class="content">
-        <h4 style="text-align: center; margin-bottom: 20px;">{{ $judul ?? 'Laporan Detail Maintenance' }}</h4>
         <table style="width: 100%; margin-bottom: 20px;">
             <tr>
                 <td style="width: 48%; vertical-align: top;">
                     <div class="section-title">Informasi Barang</div>
-                    {{-- Gunakan tabel untuk tata letak yang rapi --}}
                     <table style="width: 100%;">
                         <tr>
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">ID Barang:</td>
@@ -219,11 +251,11 @@
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">Ruangan:</td>
                             <td style="padding: 4px 0;">{{ $asset->ruangan->nama_ruangan ?? '-' }}</td>
                         </tr>
-                         <tr>
+                        <tr>
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tipe:</td>
                             <td style="padding: 4px 0;">{{ $asset->tipe ?? '-' }}</td>
                         </tr>
-                         @php
+                        @php
                             $jadwal = $asset->jadwals->first();
                             $siklusLabel = '-';
                             if(isset($jadwal->siklus)) {
@@ -246,125 +278,63 @@
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tanggal Mulai:</td>
                             <td style="padding: 4px 0;">{{ isset($jadwal->tanggal_mulai) ? \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d-m-Y') : '-' }}</td>
                         </tr>
-                         <tr>
-                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Keterangan:</td>
-                            <td style="padding: 4px 0;">{{ $asset->keterangan ?? '-' }}</td>
-                        </tr>
                     </table>
-
                 </td>
                 <td style="width: 4%;"></td>
                 <td style="width: 48%; vertical-align: top;">
                     <div class="section-title">Detail Maintenance</div>
-                    <div class="data-row"><strong>Tanggal Perbaikan:</strong> {{ $maintenance->tanggal_perbaikan ?? '-' }}</div>
-                    <div class="data-row"><strong>Status:</strong> {{ $maintenance->status ?? '-' }}</div>
-                    <div class="data-row"><strong>PIC:</strong> {{ $maintenance->pic ?? '-' }}</div>
-                    <div class="data-row">
-                        <strong>Teknisi:</strong><br>
-                        @php
-                            $teknisiText = $maintenance->teknisi ?? '';
-                            $teknisiLines = array_map('trim', explode("\n", str_replace("\r", "", $teknisiText)));
-                            // Filter empty lines and remove leading hyphen and space if present
-                            $teknisiFiltered = array_filter($teknisiLines, function($line) {
-                                return !empty($line) && $line != '-';
-                            });
-                            $teknisiFormatted = array_map(function($line) {
-                                // Remove leading hyphen and space if present
-                                return preg_replace('/^-\s*/', '', $line);
-                            }, $teknisiFiltered);
-                        @endphp
-
-                        @if(count($teknisiFormatted) > 0)
-                            @foreach($teknisiFormatted as $teknisi)
-                                - {{ $teknisi }}<br>
-                            @endforeach
-                        @else
-                            -
-                        @endif
-                    </div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tanggal Selesai:</td>
+                            <td style="padding: 4px 0;">{{ isset($maintenance->tanggal_perbaikan) ? \Carbon\Carbon::parse($maintenance->tanggal_perbaikan)->format('d-m-Y') : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Status:</td>
+                            <td style="padding: 4px 0;">{{ $maintenance->status ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">PIC:</td>
+                            <td style="padding: 4px 0;">{{ $maintenance->pic ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; font-weight: bold; padding: 4px 0; vertical-align: top;">Teknisi:</td>
+                            <td style="padding: 4px 0;">
+                                @php
+                                    $teknisiText = $maintenance->teknisi ?? '';
+                                    $teknisiLines = array_map('trim', explode("\n", str_replace("\r", "", $teknisiText)));
+                                    $teknisiFiltered = array_filter($teknisiLines, function($line) {
+                                        return !empty($line) && $line != '-';
+                                    });
+                                @endphp
+                                @if(count($teknisiFiltered) > 0)
+                                    @foreach($teknisiFiltered as $teknisi)
+                                        - {{ ltrim($teknisi, '-') }}<br>
+                                    @endforeach
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
-           
         </table>
-        {{-- Calculate total number of images --}}
-        @php
-            $totalImages = count($beforeImages) + count($afterImages);
-        @endphp
 
-        {{-- Page break before beforeImages section if needed (optional, based on previous content) --}}
-        <div style="page-break-before: always;"></div>
-
-        <div class="section-title" style="margin-top: 20px;">Gambar Sebelum Perbaikan</div>
-        <div style="width:100%;height:1px;clear:both;"></div>
-        <div class="image-container">
-            @forelse($beforeImages as $image)
-                @if(isset($image['base64']) && $image['base64'])
-                    <div class="image-item">
-                        <img src="{{ $image['base64'] }}" alt="Before Image">
-                        @if(isset($image['keterangan']) && $image['keterangan'])
-                            <div class="image-caption">{{ $image['keterangan'] }}</div>
-                        @endif
-                    </div>
-                @else
-                    <div class="image-item">
-                        <p>Gambar tidak tersedia</p>
-                        @if(isset($image['keterangan']) && $image['keterangan'])
-                            <div class="image-caption">{{ $image['keterangan'] }}</div>
-                        @endif
-                    </div>
-                @endif
-            @empty
-                <p>Tidak ada gambar sebelum perbaikan.</p>
-            @endforelse
-        </div>
-
-        {{-- Add page break before afterImages only if total images are 8 or more --}}
-        @if($totalImages >= 8)
-            <div style="page-break-before: always;"></div>
-        @endif
-
-        <div class="section-title" style="margin-top: 20px;">Gambar Setelah Perbaikan</div>
-        <div style="width:100%;height:1px;clear:both;"></div>
-        <div class="image-container">
-            @forelse($afterImages as $image)
-                @if(isset($image['base64']) && $image['base64'])
-                    <div class="image-item">
-                        <img src="{{ $image['base64'] }}" alt="After Image">
-                        @if(isset($image['keterangan']) && $image['keterangan'])
-                            <div class="image-caption">{{ $image['keterangan'] }}</div>
-                        @endif
-                    </div>
-                @else
-                    <div class="image-item">
-                        <p>Gambar tidak tersedia</p>
-                        @if(isset($image['keterangan']) && $image['keterangan'])
-                            <div class="image-caption">{{ $image['keterangan'] }}</div>
-                        @endif
-                    </div>
-                @endif
-            @empty
-                <p>Tidak ada gambar setelah perbaikan.</p>
-            @endforelse
-        </div>
-
-        {{-- Halaman baru untuk History Perbaikan --}}
-        <div style="page-break-before: always;"></div>
-        <div class="section-title" style="margin-top: 20px;">History Perbaikan</div>
-        <div style="width:100%;height:1px;clear:both;"></div>
-
+        {{-- History Perbaikan di halaman pertama --}}
+        <div class="section-title" style="margin-top: 30px;">History Perbaikan</div>
         @if($maintenance->history && $maintenance->history->isNotEmpty())
-            <table class="history-table">
+            <table class="history-table" style="margin-top: 10px;">
                 <thead>
                     <tr>
-                        <th>Tanggal Perbaikan</th>
-                        <th>Keterangan</th>
+                        <th style="width: 5%; text-align: center;">Tanggal Perbaikan</th>
+                        <th style="width: 20%; text-align: center;">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($maintenance->history->sortBy('created_at') as $historyItem)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($historyItem->tanggal_perbaikan)->format('d/m/Y') }}</td>
-                            <td>{{ $historyItem->keterangan ?? '-' }}</td>
+                            <td style="text-align: center;">{{ \Carbon\Carbon::parse($historyItem->tanggal_perbaikan)->format('d/m/Y') }}</td>
+                            <td style="text-align: justify; padding: 8px 12px;">{{ $historyItem->keterangan ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -372,10 +342,53 @@
         @else
             <p>Tidak ada history perbaikan untuk maintenance ini.</p>
         @endif
-    </div>
 
-    <div class="footer">
-        Dokumen ini dicetak otomatis oleh sistem pada tanggal {{ \Carbon\Carbon::now()->format('d F Y H:i') }}. Harap tidak menandatangani secara manual.
+        {{-- Section gambar selalu ditampilkan --}}
+        <div style="page-break-before: always;"></div>
+        
+        <div class="section-title" style="margin-top: 20px;">Gambar Sebelum Perbaikan</div>
+        <div class="image-container">
+            @if(isset($beforeImages) && count($beforeImages) > 0)
+                @foreach($beforeImages as $image)
+                    @if(isset($image['base64']) && $image['base64'])
+                        <div class="image-item">
+                            <img src="{{ $image['base64'] }}" alt="Before Image">
+                            @if(isset($image['keterangan']) && $image['keterangan'])
+                                <div class="image-caption">{{ $image['keterangan'] }}</div>
+                            @endif
+                        </div>
+                    @endif
+                @endforeach
+            @else
+                <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar sebelum perbaikan.</p>
+            @endif
+        </div>
+
+        @if(isset($beforeImages) && count($beforeImages) >= 4)
+            <div style="page-break-before: always;"></div>
+        @endif
+        
+        <div class="section-title" style="margin-top: 20px;">Gambar Setelah Perbaikan</div>
+        <div class="image-container">
+            @if(isset($afterImages) && count($afterImages) > 0)
+                @foreach($afterImages as $image)
+                    @if(isset($image['base64']) && $image['base64'])
+                        <div class="image-item">
+                            <img src="{{ $image['base64'] }}" alt="After Image">
+                            @if(isset($image['keterangan']) && $image['keterangan'])
+                                <div class="image-caption">{{ $image['keterangan'] }}</div>
+                            @endif
+                        </div>
+                    @endif
+                @endforeach
+            @else
+                <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar setelah perbaikan.</p>
+            @endif
+        </div>
+
+        <div class="footer">
+            Dokumen ini dicetak otomatis oleh sistem pada tanggal {{ \Carbon\Carbon::now()->format('d F Y H:i') }}. Harap tidak menandatangani secara manual.
+        </div>
     </div>
 
 </body>

@@ -346,30 +346,4 @@ class ExportController extends Controller
         // Remove Excel export logic for detail maintenance
         return redirect()->back()->with('error', 'Ekspor Excel tidak tersedia untuk detail maintenance ini.');
     }
-
-    // Preview Methods
-    public function previewMaintenance()
-    {
-        $maintenances = Maintenance::with(['dataBarang', 'ruangan'])->get();
-        return view('exports.preview.maintenance', compact('maintenances'));
-    }
-
-    public function previewDetailMaintenance($id_maintenance)
-    {
-        $maintenance = Maintenance::with(['dataBarang', 'ruangan', 'beforeImages', 'afterImages'])
-            ->findOrFail($id_maintenance);
-        return view('exports.preview.maintenance-detail', compact('maintenance'));
-    }
-
-    public function previewRuangan()
-    {
-        $ruangans = Ruangan::with('dataBarang')->get();
-        return view('exports.preview.ruangan', compact('ruangans'));
-    }
-
-    public function previewAssets()
-    {
-        $assets = Asset::with(['ruangan', 'jadwals'])->get();
-        return view('exports.preview.assets', compact('assets'));
-    }
 } 
