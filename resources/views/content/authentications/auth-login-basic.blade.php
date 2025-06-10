@@ -47,7 +47,7 @@
             <!-- Logo -->
             <div class="app-brand justify-content-center">
               <a href="{{url('/')}}" class="app-brand-link gap-2">
-                <img src="{{ asset('assets/logo.png') }}" alt="RRI Logo" style="height: 50px;">
+                <img src="{{ asset('assets/logo mainup.png') }}" alt="RRI Logo" style="height: 50px;">
               </a>
             </div>
             <!-- /Logo -->

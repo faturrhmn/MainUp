@@ -298,32 +298,31 @@ class ExportController extends Controller
 
         // Encode gambar maintenance ke Base64
         $beforeImagesEncoded = $maintenance->beforeImages->map(function($image) {
-            $path = Storage::path('maintenance/before/' . $image->hashed_name);
-             if (Storage::disk('public')->exists('maintenance/before/' . $image->hashed_name)) {
+            $path = public_path('assets/maintenance/before/' . $image->hashed_name);
+            if (file_exists($path)) {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
-                 $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type); // Handle jpg sebagai jpeg
-                $data = Storage::disk('public')->get('maintenance/before/' . $image->hashed_name);
+                $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type);
+                $data = file_get_contents($path);
                 $base64 = 'data:' . $mime_type . ';base64,' . base64_encode($data);
                 return ['base64' => $base64, 'keterangan' => $image->keterangan];
             } else {
-                 return ['base64' => null, 'keterangan' => $image->keterangan];
+                return ['base64' => null, 'keterangan' => $image->keterangan];
             }
         });
 
         $afterImagesEncoded = $maintenance->afterImages->map(function($image) {
-             $path = Storage::path('maintenance/after/' . $image->hashed_name);
-            if (Storage::disk('public')->exists('maintenance/after/' . $image->hashed_name)) {
+            $path = public_path('assets/maintenance/after/' . $image->hashed_name);
+            if (file_exists($path)) {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
-                 $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type); // Handle jpg sebagai jpeg
-                $data = Storage::disk('public')->get('maintenance/after/' . $image->hashed_name);
+                $mime_type = 'image/' . ($type === 'jpg' ? 'jpeg' : $type);
+                $data = file_get_contents($path);
                 $base64 = 'data:' . $mime_type . ';base64,' . base64_encode($data);
                 return ['base64' => $base64, 'keterangan' => $image->keterangan];
             } else {
-                 return ['base64' => null, 'keterangan' => $image->keterangan];
+                return ['base64' => null, 'keterangan' => $image->keterangan];
             }
         });
 
-       
         // Encode logo RRI dan MainUp ke Base64 (menggunakan helper function)
         $logoData = $this->getBase64Logos();
 

@@ -34,7 +34,7 @@
     <h3>Gambar Sebelum Perbaikan</h3>
     @foreach($maintenance->beforeImages as $image)
         <div class="image-container">
-            <img src="{{ storage_path('app/public/maintenance/before/' . $image->hashed_name) }}" alt="Before Maintenance" style="width: 100%; height: auto;">
+            <img src="{{ public_path('assets/maintenance/before/' . $image->hashed_name) }}" alt="Before Maintenance" style="width: 100%; height: auto;">
             <p>{{ $image->original_name }}</p>
         </div>
     @endforeach
@@ -44,7 +44,7 @@
     <h3>Gambar Setelah Perbaikan</h3>
     @foreach($maintenance->afterImages as $image)
         <div class="image-container">
-            <img src="{{ storage_path('app/public/maintenance/after/' . $image->hashed_name) }}" alt="After Maintenance" style="width: 100%; height: auto;">
+            <img src="{{ public_path('assets/maintenance/after/' . $image->hashed_name) }}" alt="After Maintenance" style="width: 100%; height: auto;">
             <p>{{ $image->original_name }}</p>
         </div>
     @endforeach

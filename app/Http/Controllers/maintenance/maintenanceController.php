@@ -165,8 +165,8 @@ class MaintenanceController extends Controller
             foreach ($request->file('before_maintenance') as $file) {
                 $originalName = $file->getClientOriginalName();
                 $hashedName = $file->hashName();
-                $file->storeAs('maintenance/before', $hashedName, 'public');
-    
+                $file->move(public_path('assets/maintenance/before'), $hashedName);
+
                 BeforeImage::create([
                     'id_maintenance' => $maintenance->id_maintenance,
                     'original_name' => $originalName,
@@ -180,8 +180,8 @@ class MaintenanceController extends Controller
             foreach ($request->file('after_maintenance') as $file) {
                 $originalName = $file->getClientOriginalName();
                 $hashedName = $file->hashName();
-                $file->storeAs('maintenance/after', $hashedName, 'public');
-    
+                $file->move(public_path('assets/maintenance/after'), $hashedName);
+
                 AfterImage::create([
                     'id_maintenance' => $maintenance->id_maintenance,
                     'original_name' => $originalName,

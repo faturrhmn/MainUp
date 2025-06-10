@@ -67,11 +67,16 @@
         <div class="mb-4">
             @foreach($maintenance->beforeImages as $image)
                 <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    <img src="{{ asset('storage/maintenance/before/' . $image->hashed_name) }}" 
+                    @php
+                        $imagePath = public_path('assets/maintenance/before/' . $image->hashed_name);
+                        $imageUrl = file_exists($imagePath) 
+                            ? asset('assets/maintenance/before/' . $image->hashed_name)
+                            : asset('assets/img/error-image.png');
+                    @endphp
+                    <img src="{{ $imageUrl }}" 
                          alt="Before Image"
                          class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;"
-                         onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                         style="width: 200px; height: 150px; object-fit: cover;">
                     @if($image->keterangan)
                         <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
                     @endif
@@ -86,11 +91,16 @@
         <div class="mb-4">
             @foreach($maintenance->afterImages as $image)
                 <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    <img src="{{ asset('storage/maintenance/after/' . $image->hashed_name) }}" 
+                    @php
+                        $imagePath = public_path('assets/maintenance/after/' . $image->hashed_name);
+                        $imageUrl = file_exists($imagePath) 
+                            ? asset('assets/maintenance/after/' . $image->hashed_name)
+                            : asset('assets/img/error-image.png');
+                    @endphp
+                    <img src="{{ $imageUrl }}" 
                          alt="After Image"
                          class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;"
-                         onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                         style="width: 200px; height: 150px; object-fit: cover;">
                     @if($image->keterangan)
                         <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
                     @endif

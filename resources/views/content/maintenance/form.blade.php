@@ -127,11 +127,16 @@
                 <div class="mb-3">
                     @forelse($beforeImages as $image)
                         <label class="d-inline-block position-relative me-3 mb-3" style="max-width: 200px; cursor: pointer;">
-                            <img src="{{ Storage::url('maintenance/before/' . $image->hashed_name) }}" 
+                            @php
+                                $imagePath = public_path('assets/maintenance/before/' . $image->hashed_name);
+                                $imageUrl = file_exists($imagePath) 
+                                    ? asset('assets/maintenance/before/' . $image->hashed_name)
+                                    : asset('assets/img/error-image.png');
+                            @endphp
+                            <img src="{{ $imageUrl }}" 
                                  alt="Before Image" 
                                  class="img-fluid"  
-                                 style="width: 200px; height: 150px; object-fit: cover; display: block;"
-                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                                 style="width: 200px; height: 150px; object-fit: cover; display: block;">
                             <input type="checkbox" name="image_ids[]" value="{{ $image->id }}" class="form-check-input position-absolute top-0 start-0 m-2">
                         </label>
                     @empty
@@ -154,11 +159,16 @@
                 <div class="mb-3">
                     @forelse($afterImages as $image)
                         <label class="d-inline-block position-relative me-3 mb-3" style="max-width: 200px; cursor: pointer;">
-                            <img src="{{ Storage::url('maintenance/after/' . $image->hashed_name) }}" 
+                            @php
+                                $imagePath = public_path('assets/maintenance/after/' . $image->hashed_name);
+                                $imageUrl = file_exists($imagePath) 
+                                    ? asset('assets/maintenance/after/' . $image->hashed_name)
+                                    : asset('assets/img/error-image.png');
+                            @endphp
+                            <img src="{{ $imageUrl }}" 
                                  alt="After Image" 
                                  class="img-fluid"  
-                                 style="width: 200px; height: 150px; object-fit: cover; display: block;"
-                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/error-image.png') }}';">
+                                 style="width: 200px; height: 150px; object-fit: cover; display: block;">
                             <input type="checkbox" name="image_ids[]" value="{{ $image->id }}" class="form-check-input position-absolute top-0 start-0 m-2">
                         </label>
                     @empty
