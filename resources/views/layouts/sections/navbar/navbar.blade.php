@@ -87,12 +87,25 @@ $navbarDetached = ($navbarDetached ?? '');
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
-            <div class="flex-grow-1">
-                      <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                      <small class="text-muted">{{ Auth::user()->email }}</small>
-                    </div>
+              <div class="d-flex align-items-center">
+                @if(Auth::user()->profile_photo)
+                    <img src="{{ asset('storage/profile-photos/' . Auth::user()->profile_photo) }}" alt="user-avatar" class="d-block rounded" height="40" width="40" />
+                @else
+                    <img src="{{ asset('assets/img/avatars/default.jpg') }}" alt="user-avatar" class="d-block rounded" height="40" width="40" />
+                @endif
+                <div class="flex-grow-1 ms-2">
+                  <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+                  <small class="text-muted">{{ Auth::user()->username }}</small>
+                </div>
+              </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="{{ route('profile.index') }}">
+                  <i class="bx bx-user me-2"></i>
+                  <span class="align-middle">My Profile</span>
+                </a>
+              </li>
               <li>
                 <div class="dropdown-divider my-1"></div>
               </li>

@@ -9,6 +9,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\maintenance\MaintenanceController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,15 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Profile Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/delete-photo', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
     
     /*
     |--------------------------------------------------------------------------
