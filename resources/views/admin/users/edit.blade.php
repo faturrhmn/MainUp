@@ -29,14 +29,24 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="password">Password (Kosongkan jika tidak ingin mengubah)</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Masukkan password baru" />
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Masukkan password baru" />
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="bx bx-hide"></i>
+                            </button>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="password_confirmation">Konfirmasi Password</label>
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password baru" />
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password baru" />
+                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                                <i class="bx bx-hide"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="role_id">Role</label>
@@ -57,4 +67,38 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('page-script')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle Password
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Toggle icon
+        const icon = this.querySelector('i');
+        icon.classList.toggle('bx-hide');
+        icon.classList.toggle('bx-show');
+    });
+
+    // Toggle Password Confirmation
+    const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
+    const passwordConfirmation = document.getElementById('password_confirmation');
+    
+    togglePasswordConfirmation.addEventListener('click', function() {
+        const type = passwordConfirmation.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordConfirmation.setAttribute('type', type);
+        
+        // Toggle icon
+        const icon = this.querySelector('i');
+        icon.classList.toggle('bx-hide');
+        icon.classList.toggle('bx-show');
+    });
+});
+</script>
 @endsection

@@ -21,6 +21,7 @@ use App\Models\DataBarang;
 use App\Exports\MaintenanceExport;
 use App\Exports\RuanganExport;
 use App\Exports\AssetsExport;
+use Carbon\Carbon;
 
 class ExportController extends Controller
 {
@@ -337,9 +338,15 @@ class ExportController extends Controller
 
         if ($request->type === 'pdf') {
             $judul = 'LAPORAN DETAIL MAINTENANCE';
+            
+            // Format nama file: maintenance_[nama_aset]_[tanggal_selesai]
+            $namaAset = str_replace([' ', '/', '\\'], '_', $maintenance->asset->nama_barang);
+            $tanggalSelesai = $maintenance->tanggal_perbaikan ? Carbon::parse($maintenance->tanggal_perbaikan)->format('d_m_Y') : 'belum_selesai';
+            $fileName = "maintenance_{$namaAset}_{$tanggalSelesai}.pdf";
+            
             return PDF::loadView('exports.detail-maintenance-pdf', array_merge($data, ['judul' => $judul]))
                        ->setPaper('a4', 'portrait')
-                       ->stream('detail_maintenance_' . $id_maintenance . '.pdf');
+                       ->stream($fileName);
         }
         
         // Remove Excel export logic for detail maintenance

@@ -11,9 +11,17 @@ use App\Models\AfterImage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Services\ImageService;
 
 class MaintenanceController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService = null)
+    {
+        $this->imageService = $imageService ?? app(ImageService::class);
+    }
+
     public function proses()
     {
         $now = now();
@@ -163,14 +171,15 @@ class MaintenanceController extends Controller
         // Upload multiple files sebelum maintenance
         if ($request->hasFile('before_maintenance')) {
             foreach ($request->file('before_maintenance') as $file) {
-                $originalName = $file->getClientOriginalName();
-                $hashedName = $file->hashName();
-                $file->move(public_path('assets/maintenance/before'), $hashedName);
+                $result = $this->imageService->compressAndSaveImage(
+                    $file,
+                    'assets/maintenance/before'
+                );
 
                 BeforeImage::create([
                     'id_maintenance' => $maintenance->id_maintenance,
-                    'original_name' => $originalName,
-                    'hashed_name' => $hashedName,
+                    'original_name' => $result['original_name'],
+                    'hashed_name' => $result['hashed_name'],
                 ]);
             }
         }
@@ -178,14 +187,15 @@ class MaintenanceController extends Controller
         // Upload multiple files setelah maintenance
         if ($request->hasFile('after_maintenance')) {
             foreach ($request->file('after_maintenance') as $file) {
-                $originalName = $file->getClientOriginalName();
-                $hashedName = $file->hashName();
-                $file->move(public_path('assets/maintenance/after'), $hashedName);
+                $result = $this->imageService->compressAndSaveImage(
+                    $file,
+                    'assets/maintenance/after'
+                );
 
                 AfterImage::create([
                     'id_maintenance' => $maintenance->id_maintenance,
-                    'original_name' => $originalName,
-                    'hashed_name' => $hashedName,
+                    'original_name' => $result['original_name'],
+                    'hashed_name' => $result['hashed_name'],
                 ]);
             }
         }

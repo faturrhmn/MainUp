@@ -103,7 +103,7 @@
         </div>
         <div class="kop">
         <h3>LPP RRI BANDUNG</h3>
-            <p>Jl. Diponegoro No.61, Bandung 40115 | Telp. (022) 4202294</p>
+            <p>Jl. Diponegoro No.61, Cihaur Geulis, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40122</p>
         </div>
         <div style="border-bottom: 1px solid black; margin: 15px 0;"></div>
         <div style="text-align: center; font-size: 14px; font-weight: bold; margin: 20px 0;">{{ $judul ?? 'Laporan Tabel' }}</div>

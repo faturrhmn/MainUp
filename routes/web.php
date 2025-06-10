@@ -8,7 +8,7 @@ use App\Http\Controllers\ruangan\RuanganController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\maintenance\MaintenanceController;
 use App\Http\Controllers\ExportController;
-use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -55,9 +55,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::get('/create', [UserController::class, 'create'])->name('create');
             Route::post('/', [UserController::class, 'store'])->name('store');
-            Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [UserController::class, 'update'])->name('update');
-            Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
         });
     });
     

@@ -64,22 +64,21 @@
     <h5 class="card-title text-primary mt-4">Before Images</h5>
     <!-- Gambar Sebelum Perbaikan -->
     @if($maintenance->beforeImages && $maintenance->beforeImages->count())
-        <div class="mb-4">
+        <div class="row">
             @foreach($maintenance->beforeImages as $image)
-                <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    @php
-                        $imagePath = public_path('assets/maintenance/before/' . $image->hashed_name);
-                        $imageUrl = file_exists($imagePath) 
-                            ? asset('assets/maintenance/before/' . $image->hashed_name)
-                            : asset('assets/img/error-image.png');
-                    @endphp
-                    <img src="{{ $imageUrl }}" 
-                         alt="Before Image"
-                         class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;">
-                    @if($image->keterangan)
-                        <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
-                    @endif
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <img src="{{ asset('assets/maintenance/before/' . $image->hashed_name) }}" 
+                             class="card-img-top" 
+                             alt="Before Maintenance Image"
+                             loading="lazy"
+                             style="max-height: 300px; object-fit: contain;">
+                        @if($image->keterangan)
+                            <div class="card-body">
+                                <p class="card-text">{{ $image->keterangan }}</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -88,22 +87,21 @@
     <h5 class="card-title text-primary mt-4">After Images</h5>
     <!-- Gambar Setelah Perbaikan -->
     @if($maintenance->afterImages && $maintenance->afterImages->count())
-        <div class="mb-4">
+        <div class="row">
             @foreach($maintenance->afterImages as $image)
-                <div class="d-inline-block me-3 mb-3" style="max-width: 200px;">
-                    @php
-                        $imagePath = public_path('assets/maintenance/after/' . $image->hashed_name);
-                        $imageUrl = file_exists($imagePath) 
-                            ? asset('assets/maintenance/after/' . $image->hashed_name)
-                            : asset('assets/img/error-image.png');
-                    @endphp
-                    <img src="{{ $imageUrl }}" 
-                         alt="After Image"
-                         class="img-thumbnail"
-                         style="width: 200px; height: 150px; object-fit: cover;">
-                    @if($image->keterangan)
-                        <p class="small text-muted mt-1">{{ $image->keterangan }}</p>
-                    @endif
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <img src="{{ asset('assets/maintenance/after/' . $image->hashed_name) }}" 
+                             class="card-img-top" 
+                             alt="After Maintenance Image"
+                             loading="lazy"
+                             style="max-height: 300px; object-fit: contain;">
+                        @if($image->keterangan)
+                            <div class="card-body">
+                                <p class="card-text">{{ $image->keterangan }}</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>

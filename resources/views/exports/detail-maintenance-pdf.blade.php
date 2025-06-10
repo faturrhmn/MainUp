@@ -3,6 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>{{ $judul ?? 'Detail Maintenance' }}</title>
+    @php
+        $totalBeforeImages = isset($beforeImages) ? count($beforeImages) : 0;
+        $totalAfterImages = isset($afterImages) ? count($afterImages) : 0;
+        $totalImages = $totalBeforeImages + $totalAfterImages;
+        $shouldSeparatePages = $totalImages > 4;
+    @endphp
     <style>
         body {
             font-family: "DejaVu Sans", sans-serif; /* Menggunakan DejaVu Sans untuk support karakter non-ASCII */
@@ -100,15 +106,9 @@
         }
 
         .section-title {
-            font-size: 16px; /* Slightly increased font size */
+            font-size: 14px;
             font-weight: bold;
-            margin-top: 20px; /* Increased margin */
-            margin-bottom: 10px; /* Adjusted margin */
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee; /* Added subtle border */
-            display: block;
-            clear: both;
-            width: 100%;
+            text-align: center;
         }
 
         .data-row {
@@ -122,12 +122,16 @@
             margin-right: 10px; /* Added margin */
         }
 
+        .image-section {
+            margin: 20px 0;
+        }
+
         .image-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: flex-start;
-            margin: 20px 0;
+            margin: 15px 0 30px 0;
         }
 
         .image-item {
@@ -140,23 +144,13 @@
             width: 100%;
             height: 200px;
             object-fit: contain;
-            border: 1px solid #ddd;
-            margin-bottom: 8px;
         }
 
         .image-caption {
-            font-size: 11px;
+            font-size: 10px;
             text-align: center;
             margin-top: 5px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            color: #666;
         }
 
         .history-table {
@@ -196,10 +190,36 @@
             font-style: italic;
              text-align: center; /* Center footer text */
         }
+
+        .page-container {
+            margin-bottom: {{ $shouldSeparatePages ? '0' : '40px' }};
+        }
+
+        /* Single page layout (less than 5 images) */
+        .single-page {
+            page-break-inside: avoid;
+        }
+        .single-page .section-title {
+            margin: 40px 0 20px 0;
+        }
+        .single-page .section-title.after {
+            margin-top: 60px;
+        }
+        .single-page .image-container {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        /* Multi page layout (5 or more images) */
+        .multi-page .section-title {
+            margin: 20px 0 15px 0;
+        }
+        .multi-page .image-container {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-
     <div class="header">
         <div class="logo-container">
             @if(isset($logoRriBase64) && $logoRriBase64)
@@ -215,7 +235,7 @@
         </div>
         <div class="kop">
             <h3>LPP RRI BANDUNG</h3>
-            <p>Jl. Diponegoro No.61, Bandung 40115 | Telp. (022) 4202294</p>
+            <p>Jl. Diponegoro No.61, Cihaur Geulis, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40122</p>
         </div>
         <div class="divider"></div>
         <div class="title">LAPORAN DETAIL MAINTENANCE</div>
@@ -274,10 +294,6 @@
                             <td style="width: 180px; font-weight: bold; padding: 4px 0;">Siklus:</td>
                             <td style="padding: 4px 0;">{{ $siklusLabel }}</td>
                         </tr>
-                        <tr>
-                            <td style="width: 180px; font-weight: bold; padding: 4px 0;">Tanggal Mulai:</td>
-                            <td style="padding: 4px 0;">{{ isset($jadwal->tanggal_mulai) ? \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d-m-Y') : '-' }}</td>
-                        </tr>
                     </table>
                 </td>
                 <td style="width: 4%;"></td>
@@ -320,7 +336,7 @@
             </tr>
         </table>
 
-        {{-- History Perbaikan di halaman pertama --}}
+        {{-- History Perbaikan --}}
         <div class="section-title" style="margin-top: 30px;">History Perbaikan</div>
         @if($maintenance->history && $maintenance->history->isNotEmpty())
             <table class="history-table" style="margin-top: 10px;">
@@ -343,47 +359,50 @@
             <p>Tidak ada history perbaikan untuk maintenance ini.</p>
         @endif
 
-        {{-- Section gambar selalu ditampilkan --}}
-        <div style="page-break-before: always;"></div>
-        
-        <div class="section-title" style="margin-top: 20px;">Gambar Sebelum Perbaikan</div>
-        <div class="image-container">
-            @if(isset($beforeImages) && count($beforeImages) > 0)
-                @foreach($beforeImages as $image)
-                    @if(isset($image['base64']) && $image['base64'])
-                        <div class="image-item">
-                            <img src="{{ $image['base64'] }}" alt="Before Image">
-                            @if(isset($image['keterangan']) && $image['keterangan'])
-                                <div class="image-caption">{{ $image['keterangan'] }}</div>
-                            @endif
-                        </div>
-                    @endif
-                @endforeach
-            @else
-                <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar sebelum perbaikan.</p>
-            @endif
-        </div>
-
-        @if(isset($beforeImages) && count($beforeImages) >= 4)
+        @if($shouldSeparatePages)
             <div style="page-break-before: always;"></div>
         @endif
-        
-        <div class="section-title" style="margin-top: 20px;">Gambar Setelah Perbaikan</div>
-        <div class="image-container">
-            @if(isset($afterImages) && count($afterImages) > 0)
-                @foreach($afterImages as $image)
-                    @if(isset($image['base64']) && $image['base64'])
-                        <div class="image-item">
-                            <img src="{{ $image['base64'] }}" alt="After Image">
-                            @if(isset($image['keterangan']) && $image['keterangan'])
-                                <div class="image-caption">{{ $image['keterangan'] }}</div>
-                            @endif
-                        </div>
-                    @endif
-                @endforeach
-            @else
-                <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar setelah perbaikan.</p>
+
+        <div class="{{ $shouldSeparatePages ? 'multi-page' : 'single-page' }}">
+            <div class="section-title">Gambar Sebelum Perbaikan</div>
+            <div class="image-container">
+                @if(isset($beforeImages) && count($beforeImages) > 0)
+                    @foreach($beforeImages as $image)
+                        @if(isset($image['base64']) && $image['base64'])
+                            <div class="image-item">
+                                <img src="{{ $image['base64'] }}" alt="Before Image">
+                                @if(isset($image['keterangan']) && $image['keterangan'])
+                                    <div class="image-caption">{{ $image['keterangan'] }}</div>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+                @else
+                    <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar sebelum perbaikan.</p>
+                @endif
+            </div>
+
+            @if($shouldSeparatePages)
+                <div style="page-break-before: always;"></div>
             @endif
+
+            <div class="section-title {{ !$shouldSeparatePages ? 'after' : '' }}">Gambar Setelah Perbaikan</div>
+            <div class="image-container">
+                @if(isset($afterImages) && count($afterImages) > 0)
+                    @foreach($afterImages as $image)
+                        @if(isset($image['base64']) && $image['base64'])
+                            <div class="image-item">
+                                <img src="{{ $image['base64'] }}" alt="After Image">
+                                @if(isset($image['keterangan']) && $image['keterangan'])
+                                    <div class="image-caption">{{ $image['keterangan'] }}</div>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+                @else
+                    <p style="width: 100%; text-align: center; padding: 20px;">Tidak ada gambar setelah perbaikan.</p>
+                @endif
+            </div>
         </div>
 
         <div class="footer">

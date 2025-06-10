@@ -70,6 +70,20 @@ document.addEventListener('DOMContentLoaded', function() {
   font-size: 24px;
   color: #333;
 }
+
+.btn-icon {
+  padding: 0.4rem;
+  line-height: 1;
+  border-radius: 0.375rem;
+}
+
+.btn-icon i {
+  font-size: 1rem;
+}
+
+.table td {
+  vertical-align: middle;
+}
 </style>
 
 @section('content')
@@ -147,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <th>Tahun</th>
                                         <th>Jumlah</th>
                                         <th>Ruangan</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,6 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <td>{{ $asset->tahun }}</td>
                                         <td>{{ $asset->jumlah }}</td>
                                         <td>{{ $asset->ruangan->nama_ruangan }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ route('data-barang.show', $asset->id_aset) }}" class="btn btn-outline-secondary btn-icon">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

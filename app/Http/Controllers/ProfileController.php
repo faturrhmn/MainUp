@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -29,47 +30,101 @@ class ProfileController extends Controller
             'profile_photo' => ['nullable', 'image', 'max:2048'], // max 2MB
         ]);
 
-        // Update basic info
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
-        if ($request->has('username')) {
-            $user->username = $request->username;
-        }
-
-        // Update password if provided
-        if ($request->filled('new_password')) {
-            $user->password = Hash::make($request->new_password);
-        }
-
-        // Handle profile photo upload
-        if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists
-            if ($user->profile_photo && Storage::exists('public/profile-photos/' . $user->profile_photo)) {
-                Storage::delete('public/profile-photos/' . $user->profile_photo);
+        try {
+            // Update basic info
+            if ($request->has('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->has('username')) {
+                $user->username = $request->username;
             }
 
-            // Store new photo
-            $photoName = time() . '_' . $request->file('profile_photo')->getClientOriginalName();
-            $request->file('profile_photo')->storeAs('public/profile-photos', $photoName);
-            $user->profile_photo = $photoName;
+            // Update password if provided
+            if ($request->filled('new_password')) {
+                $user->password = Hash::make($request->new_password);
+            }
+
+            // Handle profile photo upload
+            if ($request->hasFile('profile_photo')) {
+                $photo = $request->file('profile_photo');
+                
+                // Log file information
+                Log::info('Uploading profile photo', [
+                    'original_name' => $photo->getClientOriginalName(),
+                    'size' => $photo->getSize(),
+                    'mime_type' => $photo->getMimeType()
+                ]);
+
+                // Create directory if it doesn't exist
+                $uploadPath = public_path('assets/profile-photos');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                // Delete old photo if exists
+                if ($user->profile_photo) {
+                    $oldPhotoPath = public_path('assets/profile-photos/' . $user->profile_photo);
+                    if (file_exists($oldPhotoPath)) {
+                        unlink($oldPhotoPath);
+                        Log::info('Deleted old profile photo', ['path' => $oldPhotoPath]);
+                    }
+                }
+
+                // Generate unique filename
+                $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                
+                // Move the file
+                try {
+                    $photo->move($uploadPath, $photoName);
+                    Log::info('Profile photo uploaded successfully', ['new_path' => $uploadPath . '/' . $photoName]);
+                    
+                    // Update database only if file was moved successfully
+                    $user->profile_photo = $photoName;
+                } catch (\Exception $e) {
+                    Log::error('Failed to move profile photo', [
+                        'error' => $e->getMessage(),
+                        'target_path' => $uploadPath . '/' . $photoName
+                    ]);
+                    return redirect()->back()->with('error', 'Gagal mengupload foto profil. Silakan coba lagi.');
+                }
+            }
+
+            $user->save();
+            Log::info('User profile updated successfully', ['user_id' => $user->id]);
+
+            return redirect()->back()->with('success', 'Profile berhasil diperbarui');
+        } catch (\Exception $e) {
+            Log::error('Failed to update profile', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->id
+            ]);
+            return redirect()->back()->with('error', 'Gagal memperbarui profile. Silakan coba lagi.');
         }
-
-        $user->save();
-
-        return redirect()->back()->with('success', 'Profile berhasil diperbarui');
     }
 
     public function deletePhoto()
     {
-        $user = Auth::user();
-        
-        if ($user->profile_photo && Storage::exists('public/profile-photos/' . $user->profile_photo)) {
-            Storage::delete('public/profile-photos/' . $user->profile_photo);
-            $user->profile_photo = null;
-            $user->save();
-        }
+        try {
+            $user = Auth::user();
+            
+            if ($user->profile_photo) {
+                $photoPath = public_path('assets/profile-photos/' . $user->profile_photo);
+                if (file_exists($photoPath)) {
+                    unlink($photoPath);
+                    Log::info('Profile photo deleted', ['path' => $photoPath]);
+                }
+                
+                $user->profile_photo = null;
+                $user->save();
+            }
 
-        return redirect()->back()->with('success', 'Foto profil berhasil dihapus');
+            return redirect()->back()->with('success', 'Foto profil berhasil dihapus');
+        } catch (\Exception $e) {
+            Log::error('Failed to delete profile photo', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->id ?? null
+            ]);
+            return redirect()->back()->with('error', 'Gagal menghapus foto profil. Silakan coba lagi.');
+        }
     }
 } 

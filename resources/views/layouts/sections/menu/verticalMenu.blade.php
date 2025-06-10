@@ -2,8 +2,8 @@
   <!-- Brand -->
   <div class="app-brand demo">
     <a href="{{ url('/') }}" class="app-brand-link">
-      <span class="app-brand-logo demo">
-        <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo" height="50">
+      <span class="app-brand-logo demo" style="display: block; width: auto;">
+        <img src="{{ asset('assets/logo mainup.png') }}" alt="Logo" height="50" style="display: block; width: auto;">
       </span>
     </a>
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">

@@ -14,7 +14,10 @@
   <!-- Canonical SEO -->
   <link rel="canonical" href="{{ config('variables.productPage') ? config('variables.productPage') : '' }}">
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="{{ asset('assets/logo mainup.png') }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/logo mainup.png') }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/logo mainup.png') }}" />
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets/logo mainup.png') }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/logo mainup.png') }}" />
 
   <!-- Include Styles -->
   @include('layouts/sections/styles')

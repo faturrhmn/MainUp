@@ -4,6 +4,20 @@
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}">
+<style>
+.profile-photo-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.upload-error {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+</style>
 @endsection
 
 @section('vendor-script')
@@ -22,40 +36,72 @@
             <!-- Account -->
             <div class="card-body">
                 @if(session('success'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success alert-dismissible" role="alert">
                         {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
 
                 <div class="d-flex align-items-start align-items-sm-center gap-4">
                     @if($user->profile_photo)
-                        <img src="{{ asset('storage/profile-photos/' . $user->profile_photo) }}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                        <img src="{{ asset('assets/profile-photos/' . $user->profile_photo) }}" 
+                             alt="{{ $user->name }}'s avatar" 
+                             class="profile-photo-preview rounded-circle" 
+                             id="uploadedAvatar" />
                     @else
-                        <img src="{{ asset('assets/img/avatars/default.jpg') }}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                        <img src="{{ asset('assets/img/avatars/default.jpg') }}" 
+                             alt="Default avatar" 
+                             class="profile-photo-preview rounded-circle" 
+                             id="uploadedAvatar" />
                     @endif
                     <div class="button-wrapper">
-                        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('profile.update') }}" 
+                              method="POST" 
+                              enctype="multipart/form-data" 
+                              id="profilePhotoForm">
                             @csrf
                             <label for="profile_photo" class="btn btn-primary me-2 mb-4" tabindex="0">
                                 <span class="d-none d-sm-block">Upload new photo</span>
                                 <i class="bx bx-upload d-block d-sm-none"></i>
-                                <input type="file" id="profile_photo" name="profile_photo" class="account-file-input" hidden accept="image/png, image/jpeg" />
+                                <input type="file" 
+                                       id="profile_photo" 
+                                       name="profile_photo" 
+                                       class="account-file-input" 
+                                       hidden 
+                                       accept="image/png, image/jpeg" />
                             </label>
-                            <button type="submit" class="btn btn-outline-primary account-image-reset mb-4">
-                                <i class="bx bx-reset d-block d-sm-none"></i>
+                            <button type="submit" 
+                                    class="btn btn-outline-primary account-image-save mb-4" 
+                                    id="savePhotoBtn" 
+                                    style="display: none;">
+                                <i class="bx bx-check d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Save</span>
                             </button>
                         </form>
                         @if($user->profile_photo)
-                            <form action="{{ route('profile.delete-photo') }}" method="POST" class="d-inline">
+                            <form action="{{ route('profile.delete-photo') }}" 
+                                  method="POST" 
+                                  class="d-inline" 
+                                  id="deletePhotoForm">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-danger account-image-reset mb-4">
+                                <button type="submit" 
+                                        class="btn btn-outline-danger account-image-reset mb-4" 
+                                        onclick="return confirm('Are you sure you want to delete your profile photo?')">
                                     <i class="bx bx-trash d-block d-sm-none"></i>
                                     <span class="d-none d-sm-block">Delete</span>
                                 </button>
                             </form>
                         @endif
                         <p class="text-muted mb-0">Allowed JPG or PNG. Max size of 2MB</p>
+                        @error('profile_photo')
+                            <div class="upload-error">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -84,27 +130,35 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <label for="current_password" class="form-label">Password Saat Ini</label>
-                            <input class="form-control @error('current_password') is-invalid @enderror" type="password" id="current_password" name="current_password" />
-                            @error('current_password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="input-group">
+                                <input class="form-control" type="password" id="current_password" name="current_password" placeholder="············">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="mb-3 col-md-6">
                             <label for="new_password" class="form-label">Password Baru</label>
-                            <input class="form-control @error('new_password') is-invalid @enderror" type="password" id="new_password" name="new_password" />
-                            @error('new_password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="input-group">
+                                <input class="form-control" type="password" id="new_password" name="new_password" placeholder="············">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="mb-3 col-md-6">
                             <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                            <input class="form-control" type="password" id="new_password_confirmation" name="new_password_confirmation" />
+                            <div class="input-group">
+                                <input class="form-control" type="password" id="new_password_confirmation" name="new_password_confirmation" placeholder="············">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-primary me-2">Save changes</button>
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
-
+                        <button type="reset" class="btn btn-outline-secondary">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -115,20 +169,74 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Preview uploaded image
-    const input = document.querySelector('.account-file-input');
-    const uploadedAvatar = document.getElementById('uploadedAvatar');
+    const uploadedImage = document.getElementById('uploadedAvatar');
+    const fileInput = document.querySelector('.account-file-input');
+    const saveButton = document.getElementById('savePhotoBtn');
+    const originalSrc = uploadedImage.src;
+    let hasChanges = false;
 
-    input.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedAvatar.src = e.target.result;
+    if (fileInput) {
+        fileInput.onchange = () => {
+            const file = fileInput.files[0];
+            if (file) {
+                // Validate file size (2MB = 2 * 1024 * 1024 bytes)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File is too large. Maximum size is 2MB.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Validate file type
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    alert('Only JPG and PNG files are allowed.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Preview image
+                uploadedImage.src = URL.createObjectURL(file);
+                hasChanges = true;
+                saveButton.style.display = 'inline-block';
             }
-            reader.readAsDataURL(file);
+        };
+    }
+
+    // Reset form if cancel is clicked
+    document.querySelector('button[type="reset"]')?.addEventListener('click', (e) => {
+        if (hasChanges) {
+            if (confirm('Are you sure you want to discard changes?')) {
+                uploadedImage.src = originalSrc;
+                fileInput.value = '';
+                hasChanges = false;
+                saveButton.style.display = 'none';
+            } else {
+                e.preventDefault();
+            }
         }
     });
+
+    // Toggle Password Fields
+    function setupPasswordToggle(toggleId, passwordId) {
+        const toggleBtn = document.getElementById(toggleId);
+        const passwordInput = document.getElementById(passwordId);
+        
+        if (toggleBtn && passwordInput) {
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Toggle icon
+                const icon = this.querySelector('i');
+                icon.classList.toggle('bx-hide');
+                icon.classList.toggle('bx-show');
+            });
+        }
+    }
+
+    // Setup toggle for all password fields
+    setupPasswordToggle('toggleCurrentPassword', 'current_password');
+    setupPasswordToggle('toggleNewPassword', 'new_password');
+    setupPasswordToggle('toggleConfirmPassword', 'new_password_confirmation');
 });
 </script>
 @endsection 
