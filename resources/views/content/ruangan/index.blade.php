@@ -77,6 +77,21 @@ $(document).ready(function() {
     // Initialize delete button state
     updateDeleteButton();
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    var modalRuangan = document.getElementById('modalKonfirmasiHapusRuangan');
+    if (modalRuangan) {
+        modalRuangan.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            var nama = button.getAttribute('data-nama');
+            modalRuangan.querySelector('#modal-hapus-ruangan-text').textContent =
+                'Apakah Anda yakin ingin menghapus ruangan "' + nama + '"?';
+            modalRuangan.querySelector('#formHapusRuangan').action =
+                '/ruangan/' + id;
+        });
+    }
+});
 </script>
 @endsection
 
@@ -136,6 +151,9 @@ $(document).ready(function() {
                                                         <a class="dropdown-item" href="{{ route('ruangan.show', $r->id_ruangan) }}">
                                                             <i class="bx bx-detail me-1"></i> Details
                                                         </a>
+                                                        <button type="button" class="dropdown-item text-danger btn-hapus-ruangan" data-id="{{ $r->id_ruangan }}" data-nama="{{ $r->nama_ruangan }}" data-bs-toggle="modal" data-bs-target="#modalKonfirmasiHapusRuangan">
+                                                            <i class="bx bx-trash me-1"></i> Hapus
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -150,5 +168,28 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus Ruangan -->
+<div class="modal fade" id="modalKonfirmasiHapusRuangan" tabindex="-1" aria-labelledby="modalKonfirmasiHapusRuanganLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalKonfirmasiHapusRuanganLabel">Konfirmasi Penghapusan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <span id="modal-hapus-ruangan-text">Apakah Anda yakin ingin menghapus ruangan ini?</span>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+        <form id="formHapusRuangan" method="POST" action="">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection 

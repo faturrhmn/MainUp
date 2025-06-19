@@ -85,18 +85,10 @@
                             </button>
                         </form>
                         @if($user->profile_photo)
-                            <form action="{{ route('profile.delete-photo') }}" 
-                                  method="POST" 
-                                  class="d-inline" 
-                                  id="deletePhotoForm">
-                                @csrf
-                                <button type="submit" 
-                                        class="btn btn-outline-danger account-image-reset mb-4" 
-                                        onclick="return confirm('Are you sure you want to delete your profile photo?')">
-                                    <i class="bx bx-trash d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">Delete</span>
-                                </button>
-                            </form>
+                            <button type="button" class="btn btn-outline-danger account-image-reset mb-4" data-bs-toggle="modal" data-bs-target="#modalKonfirmasiHapusFotoProfil">
+                                <i class="bx bx-trash d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Delete</span>
+                            </button>
                         @endif
                         <p class="text-muted mb-0">Allowed JPG or PNG. Max size of 2MB</p>
                         @error('profile_photo')
@@ -166,6 +158,30 @@
         </div>
     </div>
 </div>
+
+@if($user->profile_photo)
+<!-- Modal Konfirmasi Hapus Foto Profil -->
+<div class="modal fade" id="modalKonfirmasiHapusFotoProfil" tabindex="-1" aria-labelledby="modalKonfirmasiHapusFotoProfilLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalKonfirmasiHapusFotoProfilLabel">Konfirmasi Penghapusan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        Apakah Anda yakin ingin menghapus foto profil Anda?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+        <form id="formHapusFotoProfil" action="{{ route('profile.delete-photo') }}" method="POST">
+          @csrf
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
