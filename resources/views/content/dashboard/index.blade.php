@@ -113,35 +113,36 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
 
-    <!-- Card 3 -->
+    <!-- Card 3: Maintenance Proses -->
     <div class="col-md-3 col-sm-6">
       <div class="custom-card p-4 text-center">
         <div class="icon-wrapper mx-auto mb-3">
-          <i class="bi bi-shield-check"></i> <!-- Aset Preventif -->
+          <i class="bi bi-wrench"></i> <!-- Maintenance Proses -->
         </div>
-        <small class="text-muted mb-1 d-block">Aset Preventive</small>
-        <h3 class="fw-bold mb-0">{{ $totalPreventive }}</h3>
+        <small class="text-muted mb-1 d-block">Maintenance Proses</small>
+        <h3 class="fw-bold mb-0">{{ $totalMaintenanceProses }}</h3>
       </div>
     </div>
 
-    <!-- Card 4 -->
+    <!-- Card 4: Maintenance Selesai -->
     <div class="col-md-3 col-sm-6">
       <div class="custom-card p-4 text-center">
         <div class="icon-wrapper mx-auto mb-3">
-          <i class="bi bi-tools"></i> <!-- Total Corrective -->
+          <i class="bi bi-check-circle"></i> <!-- Maintenance Selesai -->
         </div>
-        <small class="text-muted mb-1 d-block">Total Corrective</small>
-        <h3 class="fw-bold mb-0">{{ $totalCorrective }}</h3>
+        <small class="text-muted mb-1 d-block">Maintenance Selesai</small>
+        <h3 class="fw-bold mb-0">{{ $totalMaintenanceSelesai }}</h3>
       </div>
     </div>
 
   </div>
 </div>
+</div>
 
 <!-- Tabel Daftar Aset -->
-<div class="row mt-4">
+<div class="row mt-2">
     <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
+        <div class="card px-4">
             <div class="d-flex align-items-end row">
                 <div class="col-sm-12">
                     <div class="card-body">

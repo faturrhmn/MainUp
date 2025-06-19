@@ -98,6 +98,7 @@ $(document).ready(function() {
                                             <option value="">Pilih Tipe Barang</option>
                                             <option value="preventive" {{ old('tipe', $asset->tipe) == 'preventive' ? 'selected' : '' }}>Preventive</option>
                                             <option value="corrective" {{ old('tipe', $asset->tipe) == 'corrective' ? 'selected' : '' }}>Corrective</option>
+                                            <option value="habispakai" {{ old('tipe', $asset->tipe) == 'habispakai' ? 'selected' : '' }}>Habis Pakai</option>
                                         </select>
                                     </div>
                                 </div>

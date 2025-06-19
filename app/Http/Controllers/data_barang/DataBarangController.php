@@ -56,7 +56,7 @@ class DataBarangController extends Controller
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
             'keterangan' => 'nullable|string',
-            'tipe' => 'required|string|in:preventive,corrective', // Tambahkan validasi tipe
+            'tipe' => 'required|string|in:preventive,corrective,habispakai', // Tambahkan validasi tipe
             'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Kembalikan ke required
             'tanggal_mulai' => 'required|date', // Kembalikan ke required
         ], [
@@ -112,7 +112,7 @@ class DataBarangController extends Controller
             'jumlah' => 'required|integer|min:1',
             'ruangan' => 'required|exists:ruangan,id_ruangan',
             'keterangan' => 'nullable|string',
-            'tipe' => 'required|string|in:preventive,corrective', // Tambahkan validasi tipe
+            'tipe' => 'required|string|in:preventive,corrective,habispakai', // Perbaiki validasi tipe
             'siklus' => 'required|string|in:hari,minggu,bulan,3_bulan,6_bulan,1_tahun', // Kembalikan ke required
             'tanggal_mulai' => 'required|date', // Kembalikan ke required
         ], [
